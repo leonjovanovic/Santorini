@@ -1,20 +1,18 @@
 package etf.santorini.jl150377d;
 
-import java.awt.Button;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.JButton;
 
 public class Field {
 	private Color color;
 	private Table table;
 	private Figure figure;
-	private int x,y;
+	public int x,y;
 	private int cur_height;
-	private int id,id2,stanje;
+	private int id,id2;
 	private JButton button;
 	private FieldAction listener = new FieldAction();
 	
@@ -24,7 +22,7 @@ public class Field {
 		this.y=y;
 		cur_height=0;
 		figure=null;
-		stanje=id=id2=0;
+		id=id2=0;
 		color=Color.GREEN;
 		button=new JButton(cur_height +" / "+ id+""+id2);
 		button.setBackground(Color.GREEN);
@@ -148,7 +146,6 @@ public class Field {
 				table.p11=false;
 				f.setText(cur_height +" / "+ id+""+id2);
 				System.out.println(x+" - "+y+" - "+id);
-				System.out.println("stigao1");
 			}
 			else if(table.p12) {
 					table.p1.create_figures2(x, y);
@@ -156,7 +153,7 @@ public class Field {
 					table.p12=false;
 					f.setText(cur_height +" / "+ id+""+id2);
 					System.out.println(x+" - "+y);
-					System.out.println("stigao2");
+					table.text_file.println(table.convert(table.p1.f1.f.y, table.p1.f1.f.x)+" "+table.convert(table.p1.f2.f.y, table.p1.f2.f.x));
 				}
 				else if(table.p21) {
 						table.p2.create_figures1(x, y);
@@ -173,6 +170,7 @@ public class Field {
 						System.out.println(x+" - "+y);
 						table.firstClick=table.start=true;
 						table.player1=1;
+						table.text_file.println(table.convert(table.p2.f1.f.y, table.p2.f1.f.x)+" "+table.convert(table.p2.f2.f.y, table.p2.f2.f.x));
 					}
 			
 

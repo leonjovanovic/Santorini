@@ -1,5 +1,7 @@
 package etf.santorini.jl150377d;
 import java.awt.*;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 
 import javax.swing.JPanel;
 
@@ -11,10 +13,15 @@ public class Table {
 	public Figure origin,current_player=null;
 	public boolean start, firstClick,p11,p12,p21,p22;
 	public int build,red,player1;
+	PrintWriter text_file;
+	
 	
 	public Table() {
 		start=firstClick=false;
 		player1=-1;
+		try {
+			text_file = new PrintWriter("save.txt");
+		} catch (FileNotFoundException e) {	e.printStackTrace();}
 		build=0;red=99;
 		for(int i=0; i<5;i++)
 			for(int j=0; j<5; j++) {
@@ -27,7 +34,7 @@ public class Table {
 		
 		panel = new JPanel(new GridLayout(5,5));
 		fields();
-		panel.setBounds(0, 0, 500, 500);
+		panel.setMaximumSize(new Dimension(500,500));
 		panel.setVisible(true);
 		
 	}
@@ -62,5 +69,16 @@ public class Table {
 	
 	public JPanel panel() {
 		return panel;
+	}
+	
+	public String convert(int y,int x) {
+		switch(y) {
+		case 0: return "A"+(x+1)+"";
+		case 1: return "B"+(x+1)+"";
+		case 2: return "C"+(x+1)+"";
+		case 3: return "D"+(x+1)+"";
+		case 4: return "E"+(x+1)+"";
+		default: return "X"+(x+1)+"";
+		}
 	}
 }
