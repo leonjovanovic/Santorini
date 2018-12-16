@@ -7,13 +7,13 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 
 public class Field {
-	private Color color;
+	public Color color;
 	private Table table;
 	private Figure figure;
 	public int x,y;
-	private int cur_height;
-	private int id,id2;
-	private JButton button;
+	public int cur_height;
+	public int id,id2;
+	public JButton button;
 	private FieldAction listener = new FieldAction();
 	
 	public Field(Table table,int x, int y) {
@@ -153,7 +153,7 @@ public class Field {
 					table.p12=false;
 					f.setText(cur_height +" / "+ id+""+id2);
 					System.out.println(x+" - "+y);
-					table.text_file.println(table.convert(table.p1.f1.f.y, table.p1.f1.f.x)+" "+table.convert(table.p1.f2.f.y, table.p1.f2.f.x));
+					table.text_file.println(table.encrypt(table.p1.f1.f.y, table.p1.f1.f.x)+" "+table.encrypt(table.p1.f2.f.y, table.p1.f2.f.x));
 				}
 				else if(table.p21) {
 						table.p2.create_figures1(x, y);
@@ -170,7 +170,7 @@ public class Field {
 						System.out.println(x+" - "+y);
 						table.firstClick=table.start=true;
 						table.player1=1;
-						table.text_file.println(table.convert(table.p2.f1.f.y, table.p2.f1.f.x)+" "+table.convert(table.p2.f2.f.y, table.p2.f2.f.x));
+						table.text_file.println(table.encrypt(table.p2.f1.f.y, table.p2.f1.f.x)+" "+table.encrypt(table.p2.f2.f.y, table.p2.f2.f.x));
 					}
 			
 

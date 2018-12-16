@@ -53,7 +53,7 @@ public class Figure {
 		cur.add_figure(this);
 		add_field(cur);
 		cur_height=cur.get_height();
-		table.text_file.print(table.convert(old.y, old.x)+" "+table.convert(cur.y, cur.x)+" ");
+		if(table.sant.load==0)table.text_file.print(table.encrypt(old.y, old.x)+" "+table.encrypt(cur.y, cur.x)+" ");
 		return true;
 	}
 	
@@ -79,7 +79,7 @@ public class Figure {
 		if(!this.possible_to_build(x, y)) return false;
 		Field temp=table.get_field(x,y);
 		temp.build();
-		table.text_file.println(table.convert(temp.y, temp.x));
+		table.text_file.println(table.encrypt(temp.y, temp.x));
 		return true;
 	}
 }

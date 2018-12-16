@@ -2,6 +2,14 @@ package etf.santorini.jl150377d;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
 import javax.swing.*;
 
 
@@ -24,7 +32,7 @@ public class Santorini extends Frame{
 		this.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent dog) {
-				table.text_file.close();
+				if(table!=null)table.text_file.close();
 				dispose();
 			}
 		});
@@ -124,7 +132,8 @@ public class Santorini extends Frame{
 	}
 
 	public JPanel fill_panel2() {
-		table=new Table();
+		table=new Table(this);
+		if(load==1)load_game();
 		JPanel panel_temp = new JPanel(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		
@@ -178,6 +187,98 @@ public class Santorini extends Frame{
 		l2.setOpaque(true);
 		panel_temp.add(l2,c);
 		return panel_temp;
+	}
+	
+	public void load_game() {
+		try (BufferedReader br = new BufferedReader(new FileReader("save.txt"))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+		    	if(table.p11&&table.p12) {
+		    		table.p11=table.p12=false;
+		    		String[] splited = line.split("\\s+");
+		    		System.out.println(splited[0]);
+		    		table.decrypt(splited[0]);
+		    		table.p1.create_figures1(table.x_decrypt, table.y_decrypt);
+		    		Field temp=table.get_field(table.x_decrypt, table.y_decrypt);
+					temp.add_figure(table.p1.f1);
+					temp.button.setText(temp.cur_height +" / "+ temp.id+""+temp.id2);
+					
+		    		table.decrypt(splited[1]);
+		    		table.p1.create_figures2(table.x_decrypt, table.y_decrypt);
+		    		temp=table.get_field(table.x_decrypt, table.y_decrypt);
+					temp.add_figure(table.p1.f2);
+					temp.button.setText(temp.cur_height +" / "+ temp.id+""+temp.id2);
+		    	}
+		    	else if(table.p21&&table.p22) {
+		    		table.p21=table.p22=false;
+		    		String[] splited = line.split("\\s+");
+		    		System.out.println(splited[0]);
+		    		table.decrypt(splited[0]);
+		    		table.p2.create_figures1(table.x_decrypt, table.y_decrypt);
+		    		Field temp=table.get_field(table.x_decrypt, table.y_decrypt);
+					temp.add_figure(table.p2.f1);
+					temp.button.setText(temp.cur_height +" / "+ temp.id+""+temp.id2);
+					
+		    		table.decrypt(splited[1]);
+		    		table.p2.create_figures2(table.x_decrypt, table.y_decrypt);
+		    		temp=table.get_field(table.x_decrypt, table.y_decrypt);
+					temp.add_figure(table.p2.f2);
+					temp.button.setText(temp.cur_height +" / "+ temp.id+""+temp.id2);
+
+					table.firstClick=table.start=true;
+					table.player1=1;
+		    	}
+		    	
+		    	else {
+		    		String[] splited = line.split("\\s+");
+		    		if(splited.length!=3){ //Ukoliko nakon postavljanja figura red u txt nema 3 polja reci da je save file korumpiran
+		    			JOptionPane.showMessageDialog(this, "Save file is corrupt.");this.dispose();Santorini s=new Santorini();s.setVisible(true);return;}
+		    		System.out.println(splited[0]);
+		    		table.decrypt(splited[0]);//Odakle pomeramo
+		    		Field temp=table.get_field(table.x_decrypt, table.y_decrypt);
+		    		table.decrypt(splited[1]);//Nalazimo destinaciju
+		    		boolean flag=temp.get_figure().move(table.x_decrypt, table.y_decrypt);//pomeri figuricu na x,y
+					if(flag) {
+						temp.button.setText(temp.cur_height +" / "+ temp.id+""+temp.id2);//promeni naziv polja **NA** koje smo pomerili
+						temp=table.get_field(table.x_decrypt, table.y_decrypt);
+						temp.button.setText(temp.cur_height +" / "+ temp.id+""+temp.id2);//promeni naziv polja **SA** kojeg smo pomerili
+						table.current_player=temp.get_figure();//Ona figura koju smo pomerili da bi kasnije samo ona mogla da gradi, da bi izbegli da jedna pomera a druga gradi
+					}
+					table.decrypt(splited[2]);
+					temp=table.get_field(table.x_decrypt, table.y_decrypt);
+					temp.build();
+					temp.button.setText(temp.cur_height +" / "+ temp.id+""+temp.id2);//promeni naziv polja koji smo gradili i
+					switch(temp.cur_height) {//zavisnosti od nove visine polja promeni mu boju
+						case 1:
+						case 2:
+						case 3:{
+							temp.change_color(Color.WHITE);
+							temp.button.setBackground(temp.color);
+							break;
+						}
+						case 4:{
+							temp.change_color(Color.CYAN);
+							temp.button.setBackground(temp.color);
+							break;
+						}
+					}
+					if(table.player1==1)table.player1=2;
+					else if(table.player1==2) table.player1=1;
+		    	}
+		    	
+		    	
+		    }
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			load=0;
+			table.text_file = new PrintWriter(new BufferedWriter(new FileWriter("save.txt", true)));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public static void main(String [] varg) {
