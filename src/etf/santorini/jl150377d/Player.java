@@ -2,10 +2,10 @@ package etf.santorini.jl150377d;
 
 public class Player {
 	
-	private Table table;
+	protected Table table;
 	public Figure f1,f2;
 	private static int pos_id=0;
-	private int id=++pos_id,id2;
+	protected int id=++pos_id,id2;
 	
 	public Player(Table table) {
 		this.table=table;
@@ -20,4 +20,11 @@ public class Player {
 		id2++;
 		f2=new Figure(x2,y2,table,id,id2);
 	}
+	
+
+	public boolean isLoser() {
+		if(!this.f1.is_movable()&&!this.f2.is_movable())return true;
+		return false;
+	}
+	
 }

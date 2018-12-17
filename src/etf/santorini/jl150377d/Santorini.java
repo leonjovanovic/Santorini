@@ -4,7 +4,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,7 +12,7 @@ import java.io.PrintWriter;
 import javax.swing.*;
 
 
-public class Santorini extends Frame{
+public class Santorini extends JFrame{
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -123,10 +122,12 @@ public class Santorini extends Frame{
 	private class StartGame implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			System.out.println(mode+" - "+load);
+			System.out.println(mode+" - "+load);	
 			remove(panel);
+			panel.setVisible(false);
 			panel=fill_panel2();		//START GAME			
-			add(panel);			
+			resize_panel();
+			add(panel);
 			validate();
 		}		
 	}
@@ -153,13 +154,14 @@ public class Santorini extends Frame{
 		JLabel l1=new JLabel("Player 1");
 		l1.setBackground(Color.ORANGE);
 		l1.setOpaque(true);
-		c.fill = GridBagConstraints.HORIZONTAL;
+		c.fill = GridBagConstraints.BOTH;
 		c.ipady = 0;
 		c.weightx=0;
 		c.gridx = 0;
 		c.gridwidth=1;
-		c.gridy = 1;
 		c.gridheight=5;
+		if(mode==2){c.gridy = 2;c.gridheight=4;}
+		else c.gridy=1;
 		c.ipadx = 50;
 		panel_temp.add(l1,c);
 		
@@ -175,17 +177,18 @@ public class Santorini extends Frame{
 		panel_temp.add(board,c);
 		
 		JLabel l2=new JLabel("Player 2");
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.weightx=1;
+		c.fill = GridBagConstraints.BOTH;
+		c.weightx=0;
 		c.gridx = 6;
 		c.gridwidth=1;
-		c.ipady = 0;
+		c.ipady =0;
 		c.ipadx =50;
-		c.gridy = 2;
-		c.gridheight=5;
+		if(mode==2||mode==1) {c.gridy = 2;c.gridheight=4;}
+		//c.gridheight=5;
 		l2.setBackground(Color.ORANGE);
 		l2.setOpaque(true);
-		panel_temp.add(l2,c);
+		panel_temp.add(l2,c);		
+		
 		return panel_temp;
 	}
 	
@@ -279,6 +282,57 @@ public class Santorini extends Frame{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public void add_left_button() {
+		GridBagConstraints c = new GridBagConstraints();		
+		c.fill = GridBagConstraints.VERTICAL;
+		c.ipady = 0;
+		c.weightx=0;
+		c.gridx = 0;
+		c.gridwidth=1;
+		c.gridy = 1;
+		c.gridheight=1;
+		c.ipadx = 50;
+		panel.add(table.ai1.nextStep,c);
+	}
+	
+	public void add_right_button() {
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill = GridBagConstraints.VERTICAL;
+		c.weightx=0;
+		c.gridx = 6;
+		c.gridwidth=1;
+		c.ipady = 0;
+		c.ipadx =50;
+		c.gridy = 1;
+		c.gridheight=1;
+		panel.add(table.ai2.nextStep,c);
+		
+	}
+
+	public void resize_panel() {
+		switch(mode) {
+		case 0:{
+			this.setSize(750, 650);
+			break;
+		}
+		case 1:{
+			this.setSize(790, 650);
+			add_right_button();
+			break;
+		}
+		case 2:{
+			this.setSize(830, 650);
+			add_right_button();
+			add_left_button();
+			break;
+		}
+		}
+	}
+	
+	public JFrame get_frame() {
+		return this;
 	}
 	
 	public static void main(String [] varg) {

@@ -21,18 +21,21 @@ public class Figure {
 		return id;
 	}
 	
+	public boolean isWinner() {
+		if(this.f.cur_height==3)return true;
+		return false;
+	}
+	
 	public boolean is_movable() {
-		boolean flag=false;
 		Field temp;
 		for(int i=this.x-1; i<=this.x+1; i++)
 			for(int j=this.y-1; j<=this.y+1; j++) {
 				if(!table.field_exist(i,j)) continue;
 				if(x==i && y==j) continue;
 				temp=table.get_field(i,j);
-				if(temp.get_height()-cur_height<2)flag=true;
+				if(temp.get_height()-cur_height<2)return true;
 			}
-		if(flag==true)return false;
-		else return true;
+		return false;
 	}
 	
 	public boolean possible_to_move(int x, int y) {

@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 
 public class Field {
 	public Color color;
@@ -103,7 +104,7 @@ public class Field {
 								origin_f.button.setText(origin_f.cur_height +" / "+ origin_f.id+""+origin_f.id2);//promeni naziv polja **SA** kojeg smo pomerili
 								table.current_player=figure;//Ona figura koju smo pomerili da bi kasnije samo ona mogla da gradi, da bi izbegli da jedna pomera a druga gradi
 								table.build=(table.build+1)%2;//Ovim vrtimo da MOVE i BUILD idu naizmenicno
-								
+								if(figure.isWinner()) {JOptionPane.showMessageDialog(table.sant, "Player "+figure.id +" is winner!");table.sant.dispose();table.sant.main(null);}
 							}
 							table.set_first_click(true);
 							break;
@@ -132,12 +133,15 @@ public class Field {
 								table.build=(table.build+1)%2;//Ovim vrtimo da MOVE i BUILD idu naizmenicno
 								if(table.player1==1)table.player1=2;
 								else if(table.player1==2) table.player1=1;//ovim vrtimo igrace sa id=1 i 2 koje gore ispitujemo
+								if(table.get_player(table.player1).isLoser()){JOptionPane.showMessageDialog(table.sant, "Player "+table.player1 +" is loser!");table.sant.dispose();table.sant.main(null);}
 							}
 							table.set_first_click(true);//Mozemo opet da selektujemo
+							if(table.sant.mode!=0)table.start=false;
 							break;
 						}
 					}
 				}
+				return;
 			}
 			//*******Postavljanje figurica************
 			if(table.p11) {
@@ -146,40 +150,45 @@ public class Field {
 				table.p11=false;
 				f.setText(cur_height +" / "+ id+""+id2);
 				System.out.println(x+" - "+y+" - "+id);
+				return;
 			}
-			else if(table.p12) {
-					table.p1.create_figures2(x, y);
-					add_figure(table.p1.f2);
-					table.p12=false;
-					f.setText(cur_height +" / "+ id+""+id2);
-					System.out.println(x+" - "+y);
-					table.text_file.println(table.encrypt(table.p1.f1.f.y, table.p1.f1.f.x)+" "+table.encrypt(table.p1.f2.f.y, table.p1.f2.f.x));
-				}
-				else if(table.p21) {
-						table.p2.create_figures1(x, y);
-						add_figure(table.p2.f1);
-						table.p21=false;
-						f.setText(cur_height +" / "+ id+""+id2);
-						System.out.println(x+" - "+y);
-					}
-					else if(table.p22){
-						table.p2.create_figures2(x, y);
-						add_figure(table.p2.f2);
-						table.p22=false;
-						f.setText(cur_height +" / "+ id+""+id2);
-						System.out.println(x+" - "+y);
-						table.firstClick=table.start=true;
-						table.player1=1;
-						table.text_file.println(table.encrypt(table.p2.f1.f.y, table.p2.f1.f.x)+" "+table.encrypt(table.p2.f2.f.y, table.p2.f2.f.x));
-					}
-			
-
-		}
-		
+			if(table.p12&&table.p1.f1.f!=get_field()) {
+				table.p1.create_figures2(x, y);
+				add_figure(table.p1.f2);
+				table.p12=false;
+				f.setText(cur_height +" / "+ id+""+id2);
+				System.out.println(x+" - "+y);
+				table.text_file.println(table.encrypt(table.p1.f1.f.y, table.p1.f1.f.x)+" "+table.encrypt(table.p1.f2.f.y, table.p1.f2.f.x));
+				return;
+			}
+			if(table.p21&&table.p1.f1.f!=get_field()&&table.p1.f2.f!=get_field()&&table.sant.mode==0) {
+				table.p2.create_figures1(x, y);
+				add_figure(table.p2.f1);
+				table.p21=false;
+				f.setText(cur_height +" / "+ id+""+id2);
+				System.out.println(x+" - "+y);
+				return;
+			}
+			if(table.p22&&table.p1.f1.f!=get_field()&&table.p1.f2.f!=get_field()&&table.sant.mode==0&&table.p2.f1.f!=get_field()){
+				table.p2.create_figures2(x, y);
+				add_figure(table.p2.f2);
+				table.p22=false;
+				f.setText(cur_height +" / "+ id+""+id2);
+				System.out.println(x+" - "+y);
+				table.firstClick=table.start=true;//Zavrseno postavljanje, figurice mogu da se krecu
+				table.player1=1;
+				table.text_file.println(table.encrypt(table.p2.f1.f.y, table.p2.f1.f.x)+" "+table.encrypt(table.p2.f2.f.y, table.p2.f2.f.x));
+				return;
+			}
+		}		
 	}
 
 	public void change_color(Color clr) {
 		color=clr;		
 	}
 	
+	
+	public Field get_field() {
+		return this;
+	}
 }

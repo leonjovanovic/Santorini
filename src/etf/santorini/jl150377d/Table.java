@@ -9,6 +9,7 @@ public class Table {
 	
 	private Field[][] lista=new Field[5][5];
 	public Player p1, p2;
+	public SimpleAI ai1, ai2;
 	private JPanel panel;
 	public Figure origin,current_player=null;
 	public boolean start, firstClick,p11,p12,p21,p22;
@@ -30,8 +31,8 @@ public class Table {
 			for(int j=0; j<5; j++) {
 				lista[i][j]=new Field(this,i,j);
 			}
-		p1=new Player(this);
-		p2=new Player(this);
+		create_players();
+		
 		p11=p12=p21=p22=true;
 		origin=null;
 		
@@ -109,5 +110,33 @@ public class Table {
 			return;
 		}
 		}
+	}
+	
+	public void create_players() {
+		switch(sant.mode) {
+		case 0:{
+			p1=new Player(this);
+			p2=new Player(this);
+			break;
+		}
+		case 1:{
+			p1=new Player(this);
+			ai2=new SimpleAI(this);
+			break;
+		}
+		case 2:{
+			ai1=new SimpleAI(this);
+			ai2=new SimpleAI(this);
+			break;
+		}
+		}
+	}
+	
+	public Player get_player(int id) {
+		if(p1.id==id)return p1;
+		if(p2.id==id)return p2;
+		if(ai1.id==id)return ai1;
+		if(ai2.id==id)return ai2;
+		return null;
 	}
 }
