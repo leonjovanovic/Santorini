@@ -133,10 +133,56 @@ public class Table {
 	}
 	
 	public Player get_player(int id) {
-		if(p1.id==id)return p1;
-		if(p2.id==id)return p2;
-		if(ai1.id==id)return ai1;
-		if(ai2.id==id)return ai2;
+		if(sant.mode==0) {
+			if(p1.id==id)return p1;
+			if(p2.id==id)return p2;
+		}
+		if(sant.mode==1) {
+			if(p1.id==id)return p1;
+			if(ai2.id==id)return ai2;
+		}
+		if(sant.mode==2) {
+			if(ai1.id==id)return ai1;
+			if(ai2.id==id)return ai2;
+		}
+		return null;
+	}
+
+	public Figure find_figure(int id, int id2) {
+		if(id==1) {
+			if(sant.mode==0||sant.mode==1) {//Igrac
+				if(id2==1) return this.p1.f1;
+				if(id2==2) return this.p1.f2;
+			}
+			if(sant.mode==2) {
+				if(id2==1) return this.ai1.f1;
+				if(id2==2) return this.ai1.f2;
+			}
+		}
+		if(id==2) {
+			if(sant.mode==0) {//Igrac
+				if(id2==1) return this.p2.f1;
+				if(id2==2) return this.p2.f2;
+			}
+			if(sant.mode==1||sant.mode==2) {
+				if(id2==1) return this.ai2.f1;
+				if(id2==2) return this.ai2.f2;
+			}
+		}
+		return null;
+	}
+	
+	public int switch_player(int id) {
+		if(id==1)return 2;
+		if(id==2)return 1;
+		return 0;
+	}
+
+	public Field find_field(Field field) {
+		for(int i=0;i<5;i++)
+			for(int j=0;j<5;j++) {
+				if(lista[i][j].x==field.x&&lista[i][j].y==field.y)return lista[i][j];
+			}
 		return null;
 	}
 }

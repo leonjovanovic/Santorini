@@ -191,4 +191,21 @@ public class Field {
 	public Field get_field() {
 		return this;
 	}
+	
+	public void change_color_on_height(int i) {
+		switch(i) {//zavisnosti od nove visine polja promeni mu boju
+		case 1:
+		case 2:
+		case 3:{
+			change_color(Color.WHITE);
+			button.setBackground(color);
+			break;
+		}
+		case 4:{
+			change_color(Color.CYAN);
+			button.setBackground(color);
+			break;
+		}
+	}
+	}
 }
