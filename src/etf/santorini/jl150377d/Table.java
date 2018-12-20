@@ -236,4 +236,58 @@ public class Table implements Cloneable{
 		
 		return table;
 	}
+
+	public void repaint(Table table) {
+		for(int i=0;i<5;i++)
+			for(int j=0;j<5;j++) {
+				if(this.lista[i][j].cur_height!=table.lista[i][j].cur_height) {
+					this.lista[i][j].cur_height=table.lista[i][j].cur_height;
+					this.lista[i][j].button.setText(this.lista[i][j].cur_height +" / "+ this.lista[i][j].id+""+this.lista[i][j].id2);
+					this.lista[i][j].change_color_on_height(this.lista[i][j].cur_height);
+				}
+			}
+		
+		if(ai1!=null && ((ai1.f1.x!=table.ai1.f1.x || ai1.f1.y!=table.ai1.f1.y) || (ai1.f2.x!=table.ai1.f2.x || ai1.f2.y!=table.ai1.f2.y))) {
+			Field f1=get_field(ai1.f1.x, ai1.f1.y);
+			f1.remove_figure();
+			f1.button.setText(f1.cur_height +" / "+ f1.id+""+f1.id2);
+			ai1.f1.x=table.ai1.f1.x;
+			ai1.f1.y=table.ai1.f1.y;
+			f1=get_field(ai1.f1.x, ai1.f1.y);
+			ai1.f1.f=f1;
+			f1.add_figure(ai1.f1);		
+			f1.button.setText(f1.cur_height +" / "+ f1.id+""+f1.id2);
+			
+			Field f2=get_field(ai1.f2.x, ai1.f2.y);
+			f2.remove_figure();
+			f2.button.setText(f2.cur_height +" / "+ f2.id+""+f2.id2);
+			ai1.f2.x=table.ai1.f2.x;
+			ai1.f2.y=table.ai1.f2.y;
+			f2=get_field(ai1.f2.x, ai1.f2.y);
+			ai1.f2.f=f2;
+			f2.add_figure(ai1.f2);
+			f2.button.setText(f2.cur_height +" / "+ f2.id+""+f2.id2);
+		}
+		if(ai2!=null && ((ai2.f1.x!=table.ai2.f1.x || ai2.f1.y!=table.ai2.f1.y) || (ai2.f2.x!=table.ai2.f2.x || ai2.f2.y!=table.ai2.f2.y))) {
+			Field f1=get_field(ai2.f1.x, ai2.f1.y);
+			f1.remove_figure();
+			f1.button.setText(f1.cur_height +" / "+ f1.id+""+f1.id2);
+			ai2.f1.x=table.ai2.f1.x;
+			ai2.f1.y=table.ai2.f1.y;
+			f1=get_field(ai2.f1.x, ai2.f1.y);
+			ai2.f1.f=f1;
+			f1.add_figure(ai2.f1);		
+			f1.button.setText(f1.cur_height +" / "+ f1.id+""+f1.id2);
+			
+			Field f2=get_field(ai2.f2.x, ai2.f2.y);
+			f2.remove_figure();
+			f2.button.setText(f2.cur_height +" / "+ f2.id+""+f2.id2);
+			ai2.f2.x=table.ai2.f2.x;
+			ai2.f2.y=table.ai2.f2.y;
+			f2=get_field(ai2.f2.x, ai2.f2.y);
+			ai2.f2.f=f2;
+			f2.add_figure(ai2.f2);
+			f2.button.setText(f2.cur_height +" / "+ f2.id+""+f2.id2);
+		}
+	}
 }

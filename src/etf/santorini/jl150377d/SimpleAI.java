@@ -77,11 +77,13 @@ public class SimpleAI extends Player implements Cloneable{
 				System.out.println("Najbolji score: "+tree.root.f_score);
 				Node next=tree.next_root();//Tabla sa sledecim odigranim potezom;
 				//System.out.println(next.f_score);
-				table=next.table;
+				table.repaint(next.table);
 				//*****Uslovi pobede i poraza******
 				if(table.ai2.f1.isWinner()||table.ai2.f2.isWinner()) {JOptionPane.showMessageDialog(table.sant, "Player 2 is winner!");table.sant.dispose();table.sant.main(null);}
 				if(table.get_player(2).isLoser()){JOptionPane.showMessageDialog(table.sant, "Player 2 is loser!");table.sant.dispose();table.sant.main(null);}
-				
+				System.out.println(next.table.ai2.f1+" "+next.table.ai2.f2);
+				System.out.println(next.table.lista[2][2].figure);
+				System.out.println(next.table.lista[1][2].figure);
 				table.player1=1;
 				table.start=true;
 			}
@@ -96,7 +98,7 @@ public class SimpleAI extends Player implements Cloneable{
 	
 	public double minimax(Node node,int depth,boolean isMaximizingPlayer) {
 
-	    if(node.children==null || depth==3)//children.isEmpty()
+	    if(node.children==null || depth==1)//children.isEmpty()
 	        return node.f_score;//PROVERITI!!!!!!!!
 	    
 	    if(isMaximizingPlayer) {
