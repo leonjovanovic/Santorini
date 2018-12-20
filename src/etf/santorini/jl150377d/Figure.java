@@ -3,12 +3,12 @@ package etf.santorini.jl150377d;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Figure {
+public class Figure implements Cloneable{
 	public int id,id2;
 	public int x,y;
 	private int cur_height;
 	public Field f;
-	private Table table;
+	public Table table;
 	
 	public Figure(int x, int y, Table table,int id,int id2) {
 		this.x=x;
@@ -45,6 +45,7 @@ public class Figure {
 		Field dest=table.get_field(x,y);
 		if(!table.field_exist(x,y)) return false;
 		if(dest.get_height()-cur_height>1 || dest.is_taken() || Math.abs(x-this.x)>1 || Math.abs(y-this.y)>1 || (x==this.x && y==this.y) || dest.cur_height==4) return false;
+		
 		return true;
 	}
 	
@@ -64,7 +65,11 @@ public class Figure {
 	}
 	
 	public boolean move(int x, int y) {
-		if(!this.possible_to_move(x, y)) return false;
+		System.out.println("Usao u move(): "+this);
+		if(!this.possible_to_move(x, y)) {
+			System.out.println("Nije uspeo da pomeri sa "+this.f+" na "+table.get_field(x, y));
+			return false;
+		}
 		Field old=table.get_field(this.x, this.y);//Uzima staro polje
 		old.remove_figure();//izbacuje figuru sa polja
 		remove_field();//izbacuje polje sa figure
@@ -118,5 +123,23 @@ public class Figure {
 	private void remove_field() {
 		this.f=null;
 		
+	}
+	
+	public String toString() {
+		String s="figure"+id+id2+" je na polju "+this.f;
+		return s;
+	}
+	
+	public Figure clone() throws CloneNotSupportedException {
+		Figure figure = (Figure)super.clone();
+		figure.x=this.x;
+		figure.y=this.y;
+		//figure.table=this.table;
+		figure.f=figure.table.get_field(figure.x, figure.y);
+		figure.cur_height=f.cur_height;
+		figure.id=this.id;
+		figure.id2=this.id2;
+		
+		return figure;
 	}
 }

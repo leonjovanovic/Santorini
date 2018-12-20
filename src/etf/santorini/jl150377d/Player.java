@@ -1,6 +1,6 @@
 package etf.santorini.jl150377d;
 
-public class Player {
+public class Player implements Cloneable{
 	
 	protected Table table;
 	public Figure f1,f2;
@@ -25,6 +25,16 @@ public class Player {
 	public boolean isLoser() {
 		if(!this.f1.is_movable()&&!this.f2.is_movable())return true;
 		return false;
+	}
+	
+	public Player clone() throws CloneNotSupportedException {
+		Player player=(Player)super.clone();
+		player.table=this.table;
+		player.f1=f1.clone();
+		player.f2=f2.clone();
+		player.id=this.id;
+		player.id2=this.id2;
+		return player;
 	}
 	
 }

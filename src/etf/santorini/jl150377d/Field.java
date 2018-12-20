@@ -7,10 +7,10 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
-public class Field {
+public class Field implements Cloneable{
 	public Color color;
 	private Table table;
-	private Figure figure;
+	public Figure figure;
 	public int x,y;
 	public int cur_height;
 	public int id,id2;
@@ -207,5 +207,28 @@ public class Field {
 			break;
 		}
 	}
+	}
+	
+	public String toString() {
+		String s="x: "+x+" y: "+y;
+		return s;
+	}
+	
+	public Field clone() throws CloneNotSupportedException {
+		Field field = (Field)super.clone();
+		field.x=this.x;
+		field.y=this.y;
+		field.cur_height=this.cur_height;
+		if(this.figure!=null)field.figure=this.figure;
+		else field.figure=null;
+		field.id=this.id;
+		field.id2=this.id2;
+		field.color=this.color;
+		//field.button=new JButton(cur_height +" / "+ id+""+id2);
+		//button.setBackground(field.color);
+		//button.setForeground(Color.BLACK);
+		//field.listener = new FieldAction();
+		//field.button.addActionListener(listener);
+		return field;
 	}
 }

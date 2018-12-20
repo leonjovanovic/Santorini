@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
-public class SimpleAI extends Player {
+public class SimpleAI extends Player implements Cloneable{
 	
 	public JButton nextStep;
 	private FieldAction listener = new FieldAction();
@@ -74,7 +74,9 @@ public class SimpleAI extends Player {
 			if(table.sant.mode==1 && table.player1==2) {//Za PvE
 				tree=new Tree(table);//Pravimo stablo dubine 4 sa svim mogucim potezima od trenutnog stanja table
 				minimax(tree.root,0,true);
+				System.out.println("Najbolji score: "+tree.root.f_score);
 				Node next=tree.next_root();//Tabla sa sledecim odigranim potezom;
+				//System.out.println(next.f_score);
 				table=next.table;
 				//*****Uslovi pobede i poraza******
 				if(table.ai2.f1.isWinner()||table.ai2.f2.isWinner()) {JOptionPane.showMessageDialog(table.sant, "Player 2 is winner!");table.sant.dispose();table.sant.main(null);}
@@ -115,5 +117,10 @@ public class SimpleAI extends Player {
 	        }
 	        return node.f_score;
 	    }
+	}
+	
+	public SimpleAI clone() throws CloneNotSupportedException {
+		SimpleAI ai=(SimpleAI)super.clone();
+		return ai;
 	}
 }

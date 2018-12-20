@@ -5,9 +5,9 @@ import java.io.PrintWriter;
 
 import javax.swing.JPanel;
 
-public class Table {
+public class Table implements Cloneable{
 	
-	private Field[][] lista=new Field[5][5];
+	public Field[][] lista=new Field[5][5];
 	public Player p1, p2;
 	public SimpleAI ai1, ai2;
 	private JPanel panel;
@@ -184,5 +184,56 @@ public class Table {
 				if(lista[i][j].x==field.x&&lista[i][j].y==field.y)return lista[i][j];
 			}
 		return null;
+	}
+	
+	public Table clone() throws CloneNotSupportedException {
+		Table table=(Table)super.clone();
+		table.lista=new Field[5][5];
+		for(int i=0;i<5;i++)
+			for(int j=0;j<5;j++)
+				table.lista[i][j]=this.lista[i][j].clone();
+		if(this.p1!=null) {
+			table.p1=this.p1;
+			table.p1=table.p1.clone();
+			p1.f1.table=table;
+			p1.f2.table=table;
+		}
+		if(this.p2!=null) {
+			table.p2=this.p2;
+			table.p2=table.p2.clone();
+			p2.f1.table=table;
+			p2.f2.table=table;
+		}
+		if(this.ai1!=null) {
+			table.ai1=this.ai1;
+			table.ai1=table.ai1.clone();
+			ai1.f1.table=table;
+			ai1.f2.table=table;
+		}
+		if(this.ai2!=null) {
+			table.ai2=this.ai2;
+			table.ai2=table.ai2.clone();
+			ai2.f1.table=table;
+			ai2.f2.table=table;
+		}
+		//table.panel=this.panel;
+		table.current_player=this.current_player;
+		table.current_player=table.current_player.clone();
+		table.origin=this.origin;
+		table.origin=table.origin.clone();
+		table.start=this.start;
+		table.firstClick=this.firstClick;
+		table.p11=this.p11;
+		table.p12=this.p12;
+		table.p21=this.p21;
+		table.p22=this.p22;
+		table.build=this.build;
+		table.red=this.red;
+		table.player1=this.player1;
+		table.x_decrypt=this.x_decrypt;
+		table.y_decrypt=this.y_decrypt;
+		table.sant=this.sant;
+		
+		return table;
 	}
 }
