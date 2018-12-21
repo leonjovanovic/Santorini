@@ -12,10 +12,11 @@ public class Node {
 
 	public Node(Table table, int d, boolean max) {
 		this.table = table;
+		f_score = 0;
 		isMax = max;
 		depth=d;
 		children = new ArrayList<Node>();
-		if(depth<1)
+		if(depth<3)
 			try {
 				possibleChildren();
 			} catch (CloneNotSupportedException e) {
@@ -81,7 +82,7 @@ public class Node {
 					System.out.println("Se pomerila na "+figure+" a trebala je na "+temp_field_move);
 					//System.out.println("temp_field_move: "+temp_field_move+" figure: "+figure);
 					temp_fields_build = figure.possible_builds();
-					if(depth==0) {f_score=this.calc_score(temp_field_move);System.out.println("Score: "+f_score+" Pomerila se na "+figure);}
+					if(depth==2) {f_score=this.calc_score(temp_field_move);System.out.println("Score: "+f_score+" Pomerila se na "+figure);}
 					if(temp_fields_build==null)return;
 					
 					for (int j = 0; j < temp_fields_build.size(); j++) {//Za sve moguce gradnje
