@@ -18,13 +18,28 @@ public class Santorini extends JFrame{
 	
 	Table table;
 	JPanel panel,panel2;
+	JButton finish;
 	public int load,mode;
+	public int cnt=0;
+	public Timer timer;
+	private boolean first_time;
+
+	public boolean end_game;
 	
 	public Santorini() {
 		super("Santorini");
 		mode=0;load=0;
 		this.setSize(750, 650);
 		this.setResizable(false);
+		
+		finish=new JButton("Finish");
+		FinishGame f_game=new FinishGame();
+		finish.addActionListener(f_game);
+		timer = new Timer(500 ,f_game);
+		timer.setRepeats(true);
+		first_time=true;
+		end_game=false;
+		
 		panel=fill_panel();		
 		add(panel);
 		
@@ -122,7 +137,7 @@ public class Santorini extends JFrame{
 	private class StartGame implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			System.out.println(mode+" - "+load);	
+			//System.out.println(mode+" - "+load);	
 			remove(panel);
 			panel.setVisible(false);
 			panel=fill_panel2();		//START GAME			
@@ -132,6 +147,16 @@ public class Santorini extends JFrame{
 		}		
 	}
 
+	private class FinishGame implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			table.ai2.nextStep.doClick();
+			if(first_time)timer.start();
+			if(end_game)timer.stop();
+			first_time=false;			
+		}		
+	}
+	
 	public JPanel fill_panel2() {
 		table=new Table(this);
 		if(load==1)load_game();
@@ -199,33 +224,33 @@ public class Santorini extends JFrame{
 		    	if(table.p11&&table.p12) {
 		    		table.p11=table.p12=false;
 		    		String[] splited = line.split("\\s+");
-		    		System.out.println(splited[0]);
+		    		//System.out.println(splited[0]);
 		    		table.decrypt(splited[0]);
-		    		table.p1.create_figures1(table.x_decrypt, table.y_decrypt);
+		    		table.get_player(1).create_figures1(table.x_decrypt, table.y_decrypt);
 		    		Field temp=table.get_field(table.x_decrypt, table.y_decrypt);
-					temp.add_figure(table.p1.f1);
+					temp.add_figure(table.get_player(1).f1);
 					temp.button.setText(temp.cur_height +" / "+ temp.id+""+temp.id2);
 					
 		    		table.decrypt(splited[1]);
-		    		table.p1.create_figures2(table.x_decrypt, table.y_decrypt);
+		    		table.get_player(1).create_figures2(table.x_decrypt, table.y_decrypt);
 		    		temp=table.get_field(table.x_decrypt, table.y_decrypt);
-					temp.add_figure(table.p1.f2);
+					temp.add_figure(table.get_player(1).f2);
 					temp.button.setText(temp.cur_height +" / "+ temp.id+""+temp.id2);
 		    	}
 		    	else if(table.p21&&table.p22) {
 		    		table.p21=table.p22=false;
 		    		String[] splited = line.split("\\s+");
-		    		System.out.println(splited[0]);
+		    		//System.out.println(splited[0]);
 		    		table.decrypt(splited[0]);
-		    		table.p2.create_figures1(table.x_decrypt, table.y_decrypt);
+		    		table.get_player(2).create_figures1(table.x_decrypt, table.y_decrypt);
 		    		Field temp=table.get_field(table.x_decrypt, table.y_decrypt);
-					temp.add_figure(table.p2.f1);
+					temp.add_figure(table.get_player(2).f1);
 					temp.button.setText(temp.cur_height +" / "+ temp.id+""+temp.id2);
 					
 		    		table.decrypt(splited[1]);
-		    		table.p2.create_figures2(table.x_decrypt, table.y_decrypt);
+		    		table.get_player(2).create_figures2(table.x_decrypt, table.y_decrypt);
 		    		temp=table.get_field(table.x_decrypt, table.y_decrypt);
-					temp.add_figure(table.p2.f2);
+					temp.add_figure(table.get_player(2).f2);
 					temp.button.setText(temp.cur_height +" / "+ temp.id+""+temp.id2);
 
 					table.firstClick=table.start=true;
@@ -236,7 +261,7 @@ public class Santorini extends JFrame{
 		    		String[] splited = line.split("\\s+");
 		    		if(splited.length!=3){ //Ukoliko nakon postavljanja figura red u txt nema 3 polja reci da je save file korumpiran
 		    			JOptionPane.showMessageDialog(this, "Save file is corrupt.");this.dispose();Santorini s=new Santorini();s.setVisible(true);return;}
-		    		System.out.println(splited[0]);
+		    		//System.out.println(splited[0]);
 		    		table.decrypt(splited[0]);//Odakle pomeramo
 		    		Field temp=table.get_field(table.x_decrypt, table.y_decrypt);
 		    		table.decrypt(splited[1]);//Nalazimo destinaciju
@@ -272,14 +297,12 @@ public class Santorini extends JFrame{
 		    	
 		    }
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		try {
 			load=0;
 			table.text_file = new PrintWriter(new BufferedWriter(new FileWriter("save.txt", true)));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -294,7 +317,7 @@ public class Santorini extends JFrame{
 		c.gridy = 1;
 		c.gridheight=1;
 		c.ipadx = 50;
-		panel.add(table.ai1.nextStep,c);
+		panel.add(finish,c);
 	}
 	
 	public void add_right_button() {
@@ -306,7 +329,7 @@ public class Santorini extends JFrame{
 		c.ipady = 0;
 		c.ipadx =50;
 		c.gridy = 1;
-		c.gridheight=1;
+		c.gridheight=1;		
 		panel.add(table.ai2.nextStep,c);
 		
 	}
@@ -333,6 +356,10 @@ public class Santorini extends JFrame{
 	
 	public JFrame get_frame() {
 		return this;
+	}
+	
+	public void reset() {
+		main(null);
 	}
 	
 	public static void main(String [] varg) {

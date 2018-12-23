@@ -4,7 +4,7 @@ public class Player implements Cloneable{
 	
 	protected Table table;
 	public Figure f1,f2;
-	private static int pos_id=0;
+	protected static int pos_id=0;
 	protected int id=++pos_id,id2;
 	
 	public Player(Table table) {
@@ -29,12 +29,15 @@ public class Player implements Cloneable{
 	
 	public Player clone() throws CloneNotSupportedException {
 		Player player=(Player)super.clone();
-		player.table=this.table;
 		player.f1=f1.clone();
 		player.f2=f2.clone();
 		player.id=this.id;
 		player.id2=this.id2;
 		return player;
+	}
+	
+	public void reset() {
+		pos_id=0;
 	}
 	
 }

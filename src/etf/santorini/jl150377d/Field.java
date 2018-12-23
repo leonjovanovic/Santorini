@@ -9,7 +9,7 @@ import javax.swing.JOptionPane;
 
 public class Field implements Cloneable{
 	public Color color;
-	private Table table;
+	public Table table,test=null;
 	public Figure figure;
 	public int x,y;
 	public int cur_height;
@@ -52,8 +52,8 @@ public class Field implements Cloneable{
 	
 	public void add_figure(Figure f) {
 		figure=f;
-		id=figure.id();
-		id2=figure.id2;
+		id=f.id;
+		id2=f.id2;
 	}
 	
 	public JButton get_button() {
@@ -80,12 +80,11 @@ public class Field implements Cloneable{
 			Object source=arg.getSource();
 			JButton f=(JButton)source;
 			
-						
+			
 			if(table.start) {
 				//*****SELECT*******
 				if(table.get_firstClick()&& figure!=null && table.player1==id) { //FIGURA KOJU KORISTIMO
 					table.origin=figure;
-					System.out.println(figure.f.x+" - "+figure.f.y);
 					table.origin.f.button.setBackground(Color.RED); //Selektujemo figuru koja gradi
 					table.set_first_click(false);
 				}
@@ -104,7 +103,7 @@ public class Field implements Cloneable{
 								origin_f.button.setText(origin_f.cur_height +" / "+ origin_f.id+""+origin_f.id2);//promeni naziv polja **SA** kojeg smo pomerili
 								table.current_player=figure;//Ona figura koju smo pomerili da bi kasnije samo ona mogla da gradi, da bi izbegli da jedna pomera a druga gradi
 								table.build=(table.build+1)%2;//Ovim vrtimo da MOVE i BUILD idu naizmenicno
-								if(figure.isWinner()) {JOptionPane.showMessageDialog(table.sant, "Player "+figure.id +" is winner!");table.sant.dispose();table.sant.main(null);}
+								if(figure.isWinner()) {table.sant.end_game=true;JOptionPane.showMessageDialog(table.sant, "Player "+figure.id +" is winner!");table.sant.dispose();table.sant.reset();table.p1.reset();table.p2.reset();}
 							}
 							table.set_first_click(true);
 							break;
@@ -133,7 +132,7 @@ public class Field implements Cloneable{
 								table.build=(table.build+1)%2;//Ovim vrtimo da MOVE i BUILD idu naizmenicno
 								if(table.player1==1)table.player1=2;
 								else if(table.player1==2) table.player1=1;//ovim vrtimo igrace sa id=1 i 2 koje gore ispitujemo
-								if(table.get_player(table.player1).isLoser()){JOptionPane.showMessageDialog(table.sant, "Player "+table.player1 +" is loser!");table.sant.dispose();table.sant.main(null);}
+								if(table.get_player(table.player1).isLoser()){table.sant.end_game=true;JOptionPane.showMessageDialog(table.sant, "Player "+table.player1 +" is loser!");table.sant.dispose();table.sant.reset();table.p1.reset();table.p2.reset();}
 							}
 							table.set_first_click(true);//Mozemo opet da selektujemo
 							if(table.sant.mode!=0)table.start=false;
@@ -149,7 +148,6 @@ public class Field implements Cloneable{
 				add_figure(table.p1.f1);
 				table.p11=false;
 				f.setText(cur_height +" / "+ id+""+id2);
-				System.out.println(x+" - "+y+" - "+id);
 				return;
 			}
 			if(table.p12&&table.p1.f1.f!=get_field()) {
@@ -157,7 +155,6 @@ public class Field implements Cloneable{
 				add_figure(table.p1.f2);
 				table.p12=false;
 				f.setText(cur_height +" / "+ id+""+id2);
-				System.out.println(x+" - "+y);
 				table.text_file.println(table.encrypt(table.p1.f1.f.y, table.p1.f1.f.x)+" "+table.encrypt(table.p1.f2.f.y, table.p1.f2.f.x));
 				return;
 			}
@@ -166,7 +163,6 @@ public class Field implements Cloneable{
 				add_figure(table.p2.f1);
 				table.p21=false;
 				f.setText(cur_height +" / "+ id+""+id2);
-				System.out.println(x+" - "+y);
 				return;
 			}
 			if(table.p22&&table.p1.f1.f!=get_field()&&table.p1.f2.f!=get_field()&&table.sant.mode==0&&table.p2.f1.f!=get_field()){
@@ -174,7 +170,6 @@ public class Field implements Cloneable{
 				add_figure(table.p2.f2);
 				table.p22=false;
 				f.setText(cur_height +" / "+ id+""+id2);
-				System.out.println(x+" - "+y);
 				table.firstClick=table.start=true;//Zavrseno postavljanje, figurice mogu da se krecu
 				table.player1=1;
 				table.text_file.println(table.encrypt(table.p2.f1.f.y, table.p2.f1.f.x)+" "+table.encrypt(table.p2.f2.f.y, table.p2.f2.f.x));
@@ -219,8 +214,8 @@ public class Field implements Cloneable{
 		field.x=this.x;
 		field.y=this.y;
 		field.cur_height=this.cur_height;
-		if(this.figure!=null)field.figure=this.figure;
-		else field.figure=null;
+		//if(this.figure!=null)field.figure=this.figure;
+		//else field.figure=null;
 		field.id=this.id;
 		field.id2=this.id2;
 		field.color=this.color;

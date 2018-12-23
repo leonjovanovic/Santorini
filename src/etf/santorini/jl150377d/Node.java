@@ -1,3 +1,5 @@
+				//!!!!!!!!!Figura figure21 je na polju x: 1 y: 1 ne moze da se pomeri dest: 2 a origin je: 0!!!!!!!!!!
+
 package etf.santorini.jl150377d;
 
 import java.util.ArrayList;
@@ -10,18 +12,22 @@ public class Node {
 	public List<Node> children;
 	public int depth;
 
-	public Node(Table table, int d, boolean max) {
+	public Node(Table table, int d, boolean max,Field temp_field_move) {
 		this.table = table;
-		f_score = 0;
 		isMax = max;
 		depth=d;
 		children = new ArrayList<Node>();
-		if(depth<3)
+		if(depth<2)
 			try {
 				possibleChildren();
 			} catch (CloneNotSupportedException e) {
 				e.printStackTrace();
 			}//pravimo decu samo za 4 nivoa (root je 0)
+		else if (depth==2) {
+			f_score=this.calc_score(temp_field_move);
+			table.sant.cnt++;
+			System.out.println(table.sant.cnt);
+		}
 	}
 
 	public double calc_score(Field f) {
@@ -42,7 +48,7 @@ public class Node {
 		double diff = (diff11+diff12)-(diff21+diff22);
 		double func=m+m*diff;
 		f_score=func;
-		System.out.println(f_score);
+		//System.out.println("Current Score: "+f_score);
 		return f_score;
 	}
 
@@ -59,13 +65,12 @@ public class Node {
 		if (player != null) {
 			for (int p = 0; p < 2; p++) {//Dve figure
 				
-				temp_table = table;//Uzimamo tabelu pocetnog stanja da kada se vratimo na figuru 2 se vratimo na isto stanje
-				
+				temp_table = table;//Uzimamo tabelu pocetnog stanja da kada se vratimo na figuru 2 se vratimo na isto stanje				
 				if (p == 0)figure = player.f1;
 				else figure = player.f2;	
-				System.out.println(figure);
 				temp_fields_move = figure.possible_moves();
-				if(temp_fields_move==null)return;
+				if(temp_fields_move==null)continue;
+				//for (int k = 0; k < temp_fields_move.size(); k++) System.out.println("Moguce pomeranje: "+temp_fields_move.get(k));
 				
 				for (int i = 0; i < temp_fields_move.size(); i++) {// Za svaki moguci slobodan field gde mozemo move
 					temp_table_move = temp_table.clone();//Uzimamo tabelu da zapamtimo pomeranje
@@ -73,31 +78,25 @@ public class Node {
 					Field temp_field_move = temp_fields_move.get(i);// uzimamo taj field
 					
 					//Menjamo tekst i boju polja sa kojeg i na koje pomeramo figuru
-					temp_field_move=temp_table_move.find_field(temp_field_move);//Prebacujemo referencu sa regularnog table na table_move
-
-					//temp_field_move.button.setText(temp_field_move.cur_height +" / "+ temp_field_move.id+""+temp_field_move.id2);//promeni naziv polja **NA** koje smo pomerili
-					//figure.f.button.setText(figure.f.cur_height +" / "+ figure.f.id+""+figure.f.id2);//promeni naziv polja **SA** kojeg smo pomerili
-					
+					temp_field_move=temp_table_move.find_field(temp_field_move);//Prebacujemo referencu sa regularnog table na table_move					
 					figure.move(temp_field_move.x, temp_field_move.y);// Pomeramo
-					System.out.println("Se pomerila na "+figure+" a trebala je na "+temp_field_move);
-					//System.out.println("temp_field_move: "+temp_field_move+" figure: "+figure);
+					//System.out.println("Se pomerila na "+figure+" a trebala je na "+temp_field_move);
 					temp_fields_build = figure.possible_builds();
-					if(depth==2) {f_score=this.calc_score(temp_field_move);System.out.println("Score: "+f_score+" Pomerila se na "+figure);}
-					if(temp_fields_build==null)return;
+					//if(depth==1) {f_score=this.calc_score(temp_field_move);} //System.out.println("Score: "+f_score+" Pomerila se na "+figure);}
+					if(temp_fields_build==null)continue;
+					//for (int s = 0; s < temp_fields_build.size(); s++) System.out.println("Moguce gradnje: "+temp_fields_build.get(s));
 					
 					for (int j = 0; j < temp_fields_build.size(); j++) {//Za sve moguce gradnje
 						temp_table_build=temp_table_move.clone();//Uzimamo tabelu da zapamtimo gradnju						
 						figure=temp_table_build.find_figure(figure.id,figure.id2);//nalazimo istu figuru na novoj tabli koju cemo koristiti
 						Field temp_field_build = temp_fields_build.get(j);
-						System.out.println("Gradi na polju "+temp_field_build);
+						//System.out.println("Gradi na polju "+temp_field_build);
 						figure.build(temp_field_build.x, temp_field_build.y);
 						//Menjamo tekst i boju polja koje gradimo
 						temp_field_build=temp_table_build.find_field(temp_field_build);//Prebacujemo referencu sa table_move na table_build
-						//temp_field_build.button.setText(temp_field_build.cur_height +" / "+ temp_field_build.id+""+temp_field_build.id2);//promeni naziv polja koji smo gradili i
-						//temp_field_build.change_color_on_height(temp_field_build.cur_height);//change color based on height
 						//Ovde pitamo da li je dubine 3 i odredjujemo vrednost funkcije jer ako bismo to radili	
 						//u konstruktoru morali bi da prosledjujemo razne potrebne podatke sto bi zakomplikovalo	
-						children.add(new Node(temp_table_build,depth+1, !isMax));
+						children.add(new Node(temp_table_build,depth+1, !isMax,temp_field_move));
 					
 					}
 				}

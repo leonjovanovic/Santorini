@@ -9,12 +9,13 @@ public class Tree {
 	
 	public Tree(Table table) {
 		this.table=table;
-		root=new Node(table,0,true);
+		root=new Node(table,0,true, null);
+		table.sant.cnt=0;
 	}
 	
 	public Node next_root() {
 		Double score=root.f_score;
-		if(score==0)return null;
+		//if(score==0)return null;
 		List<Node> children=new ArrayList<Node>();
 		children=root.children;
 		for(int i=0;i<children.size();i++) {
