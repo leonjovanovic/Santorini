@@ -12,10 +12,11 @@ public class SimpleAI extends Player implements Cloneable{
 	public FieldAction listener = new FieldAction();
 	public int x_func,y_func;
 	private Tree tree;
+	private double durationSum=0, sum=0;
 
 	public SimpleAI(Table table) {
 		super(table);
-		System.out.println(id);
+		//System.out.println(id);
 		x_func=1;
 		y_func=1;
 		nextStep=new JButton("Next Step");
@@ -34,7 +35,7 @@ public class SimpleAI extends Player implements Cloneable{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println(id);
+			//System.out.println(id);
 			if(table.p11&&table.sant.mode==2&&id==2) {
 				table.p11=false;
 				table.ai1.function();
@@ -73,7 +74,13 @@ public class SimpleAI extends Player implements Cloneable{
 			}
 			if(table.sant.mode==1 && table.player1==2&&id==2) {//Za PvE
 				table.building_tree=true;
+				
+				//long startTime = System.nanoTime();
 				tree=new Tree(table);//Pravimo stablo dubine 4 sa svim mogucim potezima od trenutnog stanja table
+				//long endTime = System.nanoTime();
+				//long duration = (endTime - startTime);
+			//	System.out.println("Time: "+duration/1000000);
+				
 				table.building_tree=false;
 				minimax(tree.root,0,true);
 				System.out.println("Najbolji score: "+tree.root.f_score);
@@ -88,8 +95,15 @@ public class SimpleAI extends Player implements Cloneable{
 				table.start=true;
 			}
 			if(table.sant.mode==2) {//Za EvE
-				tree=new Tree(table);//Pravimo stablo dubine 4 sa svim mogucim potezima od trenutnog stanja table
+				
+				long startTime = System.nanoTime();
+				tree=new Tree(table);//Pravimo stablo dubine 4 sa svim mogucim potezima od trenutnog stanja table				
 				minimax(tree.root,0,true);
+				long endTime = System.nanoTime();
+				long duration = (endTime - startTime);
+				durationSum+=duration; sum++;
+				System.out.println("Time: "+duration/1000000000);
+				
 				System.out.println("Najbolji score: "+tree.root.f_score);
 				Node next=tree.next_root();//Tabla sa sledecim odigranim potezom;
 				tree=null;
@@ -97,18 +111,26 @@ public class SimpleAI extends Player implements Cloneable{
 				table.repaint(next.table);
 				table.sant.validate();
 				//*****Uslovi pobede i poraza******
-				if(table.ai1.f1.isWinner()||table.ai1.f2.isWinner()) {table.sant.end_game=true;JOptionPane.showMessageDialog(table.sant, "Player 1 is winner!");table.sant.dispose();table.sant.reset();table.ai1.reset();table.ai2.reset();}//
-				if(table.get_player(1).isLoser()){table.sant.end_game=true;JOptionPane.showMessageDialog(table.sant, "Player 2 is loser!");table.sant.dispose();table.sant.reset();table.ai1.reset();table.ai2.reset();}//
+				if(table.ai1.f1.isWinner()||table.ai1.f2.isWinner()) {
+					if(table!=null)table.text_file.close();
+					table.sant.end_game=true;JOptionPane.showMessageDialog(table.sant, "Player 1 is winner!");table.sant.dispose();table.sant.reset();table.ai1.reset();table.ai2.reset();
+				}//
+				if(table.get_player(1).isLoser()){
+					if(table!=null)table.text_file.close();
+					table.sant.end_game=true;JOptionPane.showMessageDialog(table.sant, "Player 2 is loser!");table.sant.dispose();table.sant.reset();table.ai1.reset();table.ai2.reset();
+				}//
 				//*****Uslovi pobede i poraza******
-				if(table.ai2.f1.isWinner()||table.ai2.f2.isWinner()) {table.sant.end_game=true;JOptionPane.showMessageDialog(table.sant, "Player 2 is winner!");table.sant.dispose();table.sant.reset();table.ai1.reset();table.ai2.reset();}//
-				if(table.get_player(2).isLoser()){table.sant.end_game=true;JOptionPane.showMessageDialog(table.sant, "Player 2 is loser!");table.sant.dispose();table.sant.reset();table.ai1.reset();table.ai2.reset();}//
+				if(table.ai2.f1.isWinner()||table.ai2.f2.isWinner()) {
+					if(table!=null)table.text_file.close();
+					table.sant.end_game=true;JOptionPane.showMessageDialog(table.sant, "Player 2 is winner!");table.sant.dispose();table.sant.reset();table.ai1.reset();table.ai2.reset();
+				}//
+				if(table.get_player(2).isLoser()){
+					if(table!=null)table.text_file.close();
+					table.sant.end_game=true;JOptionPane.showMessageDialog(table.sant, "Player 2 is loser!");table.sant.dispose();table.sant.reset();table.ai1.reset();table.ai2.reset();
+				}//
 				
 				if(table.player1==1)table.player1=2;
 				else if(table.player1==2) table.player1=1;//ovim vrtimo igrace sa id=1 i 2 koje gore ispitujemo
-				
-				/*
-				 Dopuniti uslove za racunar vs racunar
-				 */			
 			}
 		
 		}		
@@ -116,7 +138,7 @@ public class SimpleAI extends Player implements Cloneable{
 	
 	public double minimax(Node node,int depth,boolean isMaximizingPlayer) {
 
-	    if(node.children==null || depth==2) {//children.isEmpty()
+	    if(node.children==null || depth==3) {//children.isEmpty()
 	        return node.f_score;}
 	    
 	    if(isMaximizingPlayer) {
@@ -138,6 +160,37 @@ public class SimpleAI extends Player implements Cloneable{
 	        return node.f_score;
 	    }
 	}
+	
+	public double minimax(Node node, int depth, boolean isMaximizingPlayer, double alpha, double beta) {
+		
+		 if(node.children==null || depth==2) {//children.isEmpty()
+		        return node.f_score;}
+		    
+		    if(isMaximizingPlayer) {
+		    	node.f_score = Double.NEGATIVE_INFINITY;
+		        for(int i=0;i<node.children_lenght();i++) {
+		        	Node n=node.children.get(i);
+		            double value = minimax(n, depth+1, false, alpha, beta);
+		            node.f_score = Math.max( node.f_score, value); 
+		            alpha = Math.max(alpha, node.f_score);
+		            if(beta<=alpha) break;
+		        }
+		        return node.f_score;
+		    }
+		    else {
+		    	node.f_score = Double.POSITIVE_INFINITY;
+		        for(int i=0;i<node.children_lenght();i++) {
+		        	Node n=node.children.get(i);
+		            double value = minimax(n, depth+1, true, alpha, beta);
+		            node.f_score = Math.min( node.f_score, value); 
+		            beta = Math.min(beta, node.f_score);
+		            if(beta<=alpha)break;
+		        }
+		        return node.f_score;
+		    }
+	}
+	
+	
 	
 	public SimpleAI clone() throws CloneNotSupportedException {
 		SimpleAI ai=(SimpleAI)super.clone();

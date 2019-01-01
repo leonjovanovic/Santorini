@@ -103,7 +103,9 @@ public class Field implements Cloneable{
 								origin_f.button.setText(origin_f.cur_height +" / "+ origin_f.id+""+origin_f.id2);//promeni naziv polja **SA** kojeg smo pomerili
 								table.current_player=figure;//Ona figura koju smo pomerili da bi kasnije samo ona mogla da gradi, da bi izbegli da jedna pomera a druga gradi
 								table.build=(table.build+1)%2;//Ovim vrtimo da MOVE i BUILD idu naizmenicno
-								if(figure.isWinner()) {table.sant.end_game=true;JOptionPane.showMessageDialog(table.sant, "Player "+figure.id +" is winner!");table.sant.dispose();table.sant.reset();table.p1.reset();table.p2.reset();}
+								if(figure.isWinner()) {
+									if(table!=null)table.text_file.close();
+									table.sant.end_game=true;JOptionPane.showMessageDialog(table.sant, "Player "+figure.id +" is winner!");table.sant.dispose();table.sant.reset();table.p1.reset();table.p2.reset();}
 							}
 							table.set_first_click(true);
 							break;
@@ -132,10 +134,13 @@ public class Field implements Cloneable{
 								table.build=(table.build+1)%2;//Ovim vrtimo da MOVE i BUILD idu naizmenicno
 								if(table.player1==1)table.player1=2;
 								else if(table.player1==2) table.player1=1;//ovim vrtimo igrace sa id=1 i 2 koje gore ispitujemo
-								if(table.get_player(table.player1).isLoser()){table.sant.end_game=true;JOptionPane.showMessageDialog(table.sant, "Player "+table.player1 +" is loser!");table.sant.dispose();table.sant.reset();table.p1.reset();table.p2.reset();}
+								if(table.get_player(table.player1).isLoser()){
+									if(table!=null)table.text_file.close();
+									table.sant.end_game=true;JOptionPane.showMessageDialog(table.sant, "Player "+table.player1 +" is loser!");table.sant.dispose();table.sant.reset();table.p1.reset();table.p2.reset();}
+								if(table.sant.mode!=0)table.start=false;
 							}
 							table.set_first_click(true);//Mozemo opet da selektujemo
-							if(table.sant.mode!=0)table.start=false;
+							
 							break;
 						}
 					}

@@ -12,29 +12,29 @@ public class Node {
 	public List<Node> children;
 	public int depth;
 
-	public Node(Table table, int d, boolean max,Field temp_field_move) {
+	public Node(Table table, int d, boolean max,Field temp_field_move, Field temp_field_build) {
 		this.table = table;
 		isMax = max;
 		depth=d;
 		children = new ArrayList<Node>();
-		if(depth<2)
+		if(depth<3)
 			try {
 				possibleChildren();
 			} catch (CloneNotSupportedException e) {
 				e.printStackTrace();
 			}//pravimo decu samo za 4 nivoa (root je 0)
-		else if (depth==2) {
-			f_score=this.calc_score(temp_field_move);
-			table.sant.cnt++;
-			System.out.println(table.sant.cnt);
-		}
+		if(children==null || depth==3)f_score=this.calc_score(temp_field_move,temp_field_build);
+		//System.out.println(f_score);
+		table.sant.cnt++;
+		//System.out.println(table.sant.cnt);
 	}
 
-	public double calc_score(Field f) {
+	public double calc_score(Field f, Field b) {
 		//f = m + l
 		//m = temp_field_move.cur_height;
 		//l = m*((Igrac1_figura1_razlika+ igrac1_figura2_razlika)-(Igrac2_figura1_razlika+ igrac2_figura2_razlika))
 		//Igrac1_figura1_razlika=sqrt(pow(2,igrac1_figura1.x-temp_field_move.x)+pow(2,igrac1_figura1.y-temp_field_move.y));
+		if(f==null)return 0;
 		Player p1,p2;
 		p1=table.get_player(table.player1);//Uvek ce p1 biti table.player1 jer uvek gledamo u odnosu na onog koji poziva ovo
 		p2=table.get_player(table.switch_player(table.player1));
@@ -96,7 +96,7 @@ public class Node {
 						temp_field_build=temp_table_build.find_field(temp_field_build);//Prebacujemo referencu sa table_move na table_build
 						//Ovde pitamo da li je dubine 3 i odredjujemo vrednost funkcije jer ako bismo to radili	
 						//u konstruktoru morali bi da prosledjujemo razne potrebne podatke sto bi zakomplikovalo	
-						children.add(new Node(temp_table_build,depth+1, !isMax,temp_field_move));
+						children.add(new Node(temp_table_build,depth+1, !isMax,temp_field_move,temp_field_build));
 					
 					}
 				}
