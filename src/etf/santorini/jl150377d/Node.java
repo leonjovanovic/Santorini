@@ -1,5 +1,3 @@
-				//!!!!!!!!!Figura figure21 je na polju x: 1 y: 1 ne moze da se pomeri dest: 2 a origin je: 0!!!!!!!!!!
-
 package etf.santorini.jl150377d;
 
 import java.util.ArrayList;
@@ -11,44 +9,72 @@ public class Node {
 	boolean isMax;
 	public List<Node> children;
 	public int depth;
+	boolean won=false,lost=false, deny=false;
 
-	public Node(Table table, int d, boolean max,Field temp_field_move, Field temp_field_build) {
+	public Node(Table table, int d, boolean max,Field temp_field_move, Field temp_field_build,int delta) {
 		this.table = table;
 		isMax = max;
 		depth=d;
 		children = new ArrayList<Node>();
-		if(depth<3)
+		f_score=this.calc_score(temp_field_move,temp_field_build,delta);
+		if(depth<3 && !won && !lost && !deny)
 			try {
 				possibleChildren();
 			} catch (CloneNotSupportedException e) {
 				e.printStackTrace();
 			}//pravimo decu samo za 4 nivoa (root je 0)
-		if(children==null || depth==3)f_score=this.calc_score(temp_field_move,temp_field_build);
-		//System.out.println(f_score);
+		else children=null;
+		//if(children==null || depth==3)f_score=this.calc_score(temp_field_move,temp_field_build);
 		table.sant.cnt++;
-		//System.out.println(table.sant.cnt);
 	}
 
-	public double calc_score(Field f, Field b) {
-		//f = m + l
-		//m = temp_field_move.cur_height;
-		//l = m*((Igrac1_figura1_razlika+ igrac1_figura2_razlika)-(Igrac2_figura1_razlika+ igrac2_figura2_razlika))
-		//Igrac1_figura1_razlika=sqrt(pow(2,igrac1_figura1.x-temp_field_move.x)+pow(2,igrac1_figura1.y-temp_field_move.y));
-		if(f==null)return 0;
+	public double calc_score(Field f, Field ff,int delta) {
 		Player p1,p2;
 		p1=table.get_player(table.player1);//Uvek ce p1 biti table.player1 jer uvek gledamo u odnosu na onog koji poziva ovo
 		p2=table.get_player(table.switch_player(table.player1));
-		Field field_move=f;
+		if(depth==0)System.out.println("p1f1: "+p1.f1.cur_height+" p1f2: "+p1.f2.cur_height+" p2f1: "+p2.f1.cur_height+" p2f2: "+p2.f2.cur_height);
+
+		if(f==null && table.sant.root==true) {
+			table.sant.root=false;
+			return -1;
+		}
 		double diff11,diff12,diff21,diff22;
-		diff11=Math.sqrt(Math.pow(2, p1.f1.x-field_move.x)+Math.pow(2, p1.f1.y-field_move.y));
-		diff12=Math.sqrt(Math.pow(2, p1.f2.x-field_move.x)+Math.pow(2, p1.f2.y-field_move.y));
-		diff21=Math.sqrt(Math.pow(2, p2.f1.x-field_move.x)+Math.pow(2, p2.f1.y-field_move.y));
-		diff22=Math.sqrt(Math.pow(2, p2.f2.x-field_move.x)+Math.pow(2, p2.f2.y-field_move.y));
-		double m=field_move.cur_height;
-		double diff = (diff11+diff12)-(diff21+diff22);
-		double func=m+m*diff;
+		diff11=Math.sqrt(Math.pow(2, p1.f1.x-ff.x)+Math.pow(2, p1.f1.y-ff.y));
+		diff12=Math.sqrt(Math.pow(2, p1.f2.x-ff.x)+Math.pow(2, p1.f2.y-ff.y));
+		diff21=Math.sqrt(Math.pow(2, p2.f1.x-ff.x)+Math.pow(2, p2.f1.y-ff.y));
+		diff22=Math.sqrt(Math.pow(2, p2.f2.x-ff.x)+Math.pow(2, p2.f2.y-ff.y));
+		double m=f.cur_height;
+		double b=ff.cur_height;
+		double step = b-m;
+		if(m==3 && depth==1) {
+			this.won=true;
+			return 9999;
+		}
+		if(b==3 && depth==1) {
+			if(diff21<=1.5 && p2.f1.cur_height>=2) {lost=true; return -9999;}
+			if(diff22<=1.5 && p2.f2.cur_height>=2) {lost=true; return -9999;}
+		}
+		if(step>1) {
+			if(b==4) {
+				if(diff21<=1.5 && p2.f1.cur_height>=2 && depth==1) {deny=true; return 10000;}
+				if(diff22<=1.5 && p2.f2.cur_height>=2 && depth==1) {deny=true; return 10000;}
+				b=-4;
+			}
+			if(b==3)b=8;
+			if(step==2)step=-50;
+			if(step==3)step=-70;
+			if(step==4)step=-90;
+		}
+		
+		if(delta>0)delta=delta*(-100);
+		if(delta==0)delta=2;
+		if(delta==1)delta=5;
+		
+		//Treba build da bude +1 od m ali da to ne bude 4 ali b mora da bude 4 ukoliko je protivnicka figura pred njega
+		//Odmah do X polja je ako je diffXY<=1.5
+		double diff =Math.abs((diff11+diff12)-(diff21+diff22));
+		double func=(m+step/2+delta*2+b)*(1+diff);
 		f_score=func;
-		//System.out.println("Current Score: "+f_score);
 		return f_score;
 	}
 
@@ -78,8 +104,10 @@ public class Node {
 					Field temp_field_move = temp_fields_move.get(i);// uzimamo taj field
 					
 					//Menjamo tekst i boju polja sa kojeg i na koje pomeramo figuru
-					temp_field_move=temp_table_move.find_field(temp_field_move);//Prebacujemo referencu sa regularnog table na table_move					
+					temp_field_move=temp_table_move.find_field(temp_field_move);//Prebacujemo referencu sa regularnog table na table_move
+					int delta=figure.cur_height;					
 					figure.move(temp_field_move.x, temp_field_move.y);// Pomeramo
+					delta-=figure.cur_height;
 					//System.out.println("Se pomerila na "+figure+" a trebala je na "+temp_field_move);
 					temp_fields_build = figure.possible_builds();
 					//if(depth==1) {f_score=this.calc_score(temp_field_move);} //System.out.println("Score: "+f_score+" Pomerila se na "+figure);}
@@ -96,8 +124,9 @@ public class Node {
 						temp_field_build=temp_table_build.find_field(temp_field_build);//Prebacujemo referencu sa table_move na table_build
 						//Ovde pitamo da li je dubine 3 i odredjujemo vrednost funkcije jer ako bismo to radili	
 						//u konstruktoru morali bi da prosledjujemo razne potrebne podatke sto bi zakomplikovalo	
-						children.add(new Node(temp_table_build,depth+1, !isMax,temp_field_move,temp_field_build));
-					
+						if(temp_field_move!=null && temp_field_build!=null)children.add(new Node(temp_table_build,depth+1, !isMax,temp_field_move,temp_field_build,delta));
+						//prvo napravi new Node a tek onda kad se rekurzija vrati posle pravljenja sve dece
+						//sortiraj najefikasnije po f_score tako da su najbolji pri pocetku da bi njih alfa beta odsecanje 
 					}
 				}
 			}

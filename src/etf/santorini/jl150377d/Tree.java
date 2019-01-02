@@ -9,7 +9,8 @@ public class Tree {
 	
 	public Tree(Table table) {
 		this.table=table;
-		root=new Node(table,0,true, null,null);
+		root=new Node(table,0,true, null,null,0);
+		table.sant.root=true;
 		table.sant.cnt=0;
 	}
 	

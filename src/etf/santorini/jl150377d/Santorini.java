@@ -22,7 +22,7 @@ public class Santorini extends JFrame{
 	public int load,mode;
 	public int cnt=0;
 	public Timer timer;
-	private boolean first_time;
+	public boolean first_time,root=true;
 
 	public boolean end_game;
 	

@@ -82,7 +82,7 @@ public class SimpleAI extends Player implements Cloneable{
 			//	System.out.println("Time: "+duration/1000000);
 				
 				table.building_tree=false;
-				minimax(tree.root,0,true);
+				minimax(tree.root,0,true,Double.NEGATIVE_INFINITY,Double.POSITIVE_INFINITY);
 				System.out.println("Najbolji score: "+tree.root.f_score);
 				Node next=tree.next_root();//Tabla sa sledecim odigranim potezom;
 				tree=null;
@@ -98,11 +98,11 @@ public class SimpleAI extends Player implements Cloneable{
 				
 				long startTime = System.nanoTime();
 				tree=new Tree(table);//Pravimo stablo dubine 4 sa svim mogucim potezima od trenutnog stanja table				
-				minimax(tree.root,0,true);
+				minimax(tree.root,0,true,Double.NEGATIVE_INFINITY,Double.POSITIVE_INFINITY);
 				long endTime = System.nanoTime();
 				long duration = (endTime - startTime);
 				durationSum+=duration; sum++;
-				System.out.println("Time: "+duration/1000000000);
+				System.out.println("Time: "+duration/1000000);
 				
 				System.out.println("Najbolji score: "+tree.root.f_score);
 				Node next=tree.next_root();//Tabla sa sledecim odigranim potezom;
@@ -163,7 +163,7 @@ public class SimpleAI extends Player implements Cloneable{
 	
 	public double minimax(Node node, int depth, boolean isMaximizingPlayer, double alpha, double beta) {
 		
-		 if(node.children==null || depth==2) {//children.isEmpty()
+		 if(node.children==null || depth==3) {//children.isEmpty()
 		        return node.f_score;}
 		    
 		    if(isMaximizingPlayer) {
