@@ -17,6 +17,9 @@ public class Node {
 		depth=d;
 		children = new ArrayList<Node>();
 		f_score=this.calc_score(temp_field_move,temp_field_build,delta);
+		if(f_score>table.sant.max) { table.sant.max2=table.sant.max1; table.sant.max1=table.sant.max; table.sant.max=f_score;}
+		else if(f_score>table.sant.max1){ table.sant.max2=table.sant.max1; table.sant.max1=f_score;}
+			 else if(f_score>table.sant.max2){table.sant.max2=f_score;}
 		if(depth<3 && !won && !lost && !deny)
 			try {
 				possibleChildren();
@@ -32,7 +35,6 @@ public class Node {
 		Player p1,p2;
 		p1=table.get_player(table.player1);//Uvek ce p1 biti table.player1 jer uvek gledamo u odnosu na onog koji poziva ovo
 		p2=table.get_player(table.switch_player(table.player1));
-		if(depth==0)System.out.println("p1f1: "+p1.f1.cur_height+" p1f2: "+p1.f2.cur_height+" p2f1: "+p2.f1.cur_height+" p2f2: "+p2.f2.cur_height);
 
 		if(f==null && table.sant.root==true) {
 			table.sant.root=false;
@@ -124,7 +126,14 @@ public class Node {
 						temp_field_build=temp_table_build.find_field(temp_field_build);//Prebacujemo referencu sa table_move na table_build
 						//Ovde pitamo da li je dubine 3 i odredjujemo vrednost funkcije jer ako bismo to radili	
 						//u konstruktoru morali bi da prosledjujemo razne potrebne podatke sto bi zakomplikovalo	
-						if(temp_field_move!=null && temp_field_build!=null)children.add(new Node(temp_table_build,depth+1, !isMax,temp_field_move,temp_field_build,delta));
+						Node temp=null;
+						if(temp_field_move!=null && temp_field_build!=null)temp=new Node(temp_table_build,depth+1, !isMax,temp_field_move,temp_field_build,delta);
+						
+						if(depth==2 && temp.f_score==table.sant.max) children.add(0, temp);
+						if(depth==2 && temp.f_score==table.sant.max1 && children.size()>1) children.add(1, temp);
+						if(depth==2 && temp.f_score==table.sant.max2 && children.size()>2) children.add(2, temp);
+						else children.add(temp);
+						 
 						//prvo napravi new Node a tek onda kad se rekurzija vrati posle pravljenja sve dece
 						//sortiraj najefikasnije po f_score tako da su najbolji pri pocetku da bi njih alfa beta odsecanje 
 					}

@@ -12,6 +12,9 @@ public class Tree {
 		root=new Node(table,0,true, null,null,0);
 		table.sant.root=true;
 		table.sant.cnt=0;
+		table.sant.max=Double.NEGATIVE_INFINITY;
+		table.sant.max1=Double.NEGATIVE_INFINITY;
+		table.sant.max2=Double.NEGATIVE_INFINITY;
 	}
 	
 	public Node next_root() {

@@ -134,6 +134,7 @@ public class Field implements Cloneable{
 								table.build=(table.build+1)%2;//Ovim vrtimo da MOVE i BUILD idu naizmenicno
 								if(table.player1==1)table.player1=2;
 								else if(table.player1==2) table.player1=1;//ovim vrtimo igrace sa id=1 i 2 koje gore ispitujemo
+								table.sant.stanje.setText(" State: Player "+table.player1+" is on move. Previous player moved figure "+table.sant.coordM+" and built on "+table.sant.coordB);
 								if(table.get_player(table.player1).isLoser()){
 									if(table!=null)table.text_file.close();
 									table.sant.end_game=true;JOptionPane.showMessageDialog(table.sant, "Player "+table.player1 +" is loser!");table.sant.dispose();table.sant.reset();table.p1.reset();table.p2.reset();}
@@ -153,6 +154,7 @@ public class Field implements Cloneable{
 				add_figure(table.p1.f1);
 				table.p11=false;
 				f.setText(cur_height +" / "+ id+""+id2);
+				table.sant.stanje.setText(" State: Player 1, pick starting position for your second figurine.");				
 				return;
 			}
 			if(table.p12&&table.p1.f1.f!=get_field()) {
@@ -160,6 +162,7 @@ public class Field implements Cloneable{
 				add_figure(table.p1.f2);
 				table.p12=false;
 				f.setText(cur_height +" / "+ id+""+id2);
+				table.sant.stanje.setText(" State: Player 2, pick starting position for your first figurine.");
 				table.text_file.println(table.encrypt(table.p1.f1.f.y, table.p1.f1.f.x)+" "+table.encrypt(table.p1.f2.f.y, table.p1.f2.f.x));
 				return;
 			}
@@ -168,6 +171,7 @@ public class Field implements Cloneable{
 				add_figure(table.p2.f1);
 				table.p21=false;
 				f.setText(cur_height +" / "+ id+""+id2);
+				table.sant.stanje.setText(" State: Player 2, pick starting position for your second figurine.");
 				return;
 			}
 			if(table.p22&&table.p1.f1.f!=get_field()&&table.p1.f2.f!=get_field()&&table.sant.mode==0&&table.p2.f1.f!=get_field()){
@@ -178,6 +182,7 @@ public class Field implements Cloneable{
 				table.firstClick=table.start=true;//Zavrseno postavljanje, figurice mogu da se krecu
 				table.player1=1;
 				table.text_file.println(table.encrypt(table.p2.f1.f.y, table.p2.f1.f.x)+" "+table.encrypt(table.p2.f2.f.y, table.p2.f2.f.x));
+				table.sant.stanje.setText(" State: Player "+table.player1+" is on the move.");
 				return;
 			}
 		}		

@@ -267,10 +267,12 @@ public class Table implements Cloneable{
 					x=this.lista[i][j].x;y=this.lista[i][j].y;flag=true;
 				}
 			}
-		
+																												
 		if(ai1!=null && ((ai1.f1.x!=table.ai1.f1.x || ai1.f1.y!=table.ai1.f1.y) || (ai1.f2.x!=table.ai1.f2.x || ai1.f2.y!=table.ai1.f2.y))) {
 			Field f1=get_field(ai1.f1.x, ai1.f1.y);
-			if(table.sant.load==0&&(ai1.f1.x!=table.ai1.f1.x || ai1.f1.y!=table.ai1.f1.y))text_file.print(encrypt(f1.y, f1.x)+" "+encrypt(table.ai1.f1.y,table.ai1.f1.x)+" ");//Upisi u save.txt odakle polazi i gde se pomera za figuru 1
+			if(table.sant.load==0&&(ai1.f1.x!=table.ai1.f1.x || ai1.f1.y!=table.ai1.f1.y)) {
+				text_file.print(encrypt(f1.y, f1.x)+" "+encrypt(table.ai1.f1.y,table.ai1.f1.x)+" "); 
+				sant.coordM="11 on field "+encrypt(table.ai1.f1.y,table.ai1.f1.x);}//Upisi u save.txt odakle polazi i gde se pomera za figuru 1
 			f1.remove_figure();
 			f1.button.setText(f1.cur_height +" / "+ f1.id+""+f1.id2);
 			ai1.f1.x=table.ai1.f1.x;
@@ -283,7 +285,10 @@ public class Table implements Cloneable{
 			f1.button.setText(f1.cur_height +" / "+ f1.id+""+f1.id2);
 			
 			Field f2=get_field(ai1.f2.x, ai1.f2.y);
-			if(table.sant.load==0&&(ai1.f2.x!=table.ai1.f2.x || ai1.f2.y!=table.ai1.f2.y))text_file.print(encrypt(f2.y, f2.x)+" "+encrypt(table.ai1.f2.y,table.ai1.f2.x)+" ");//Upisi u save.txt odakle polazi i gde se pomera za figuru 1
+			if(table.sant.load==0&&(ai1.f2.x!=table.ai1.f2.x || ai1.f2.y!=table.ai1.f2.y)) {
+				text_file.print(encrypt(f2.y, f2.x)+" "+encrypt(table.ai1.f2.y,table.ai1.f2.x)+" ");//Upisi u save.txt odakle polazi i gde se pomera za figuru 1
+				sant.coordM="12 on field "+encrypt(table.ai1.f2.y,table.ai1.f2.x);
+			}
 			f2.remove_figure();
 			f2.button.setText(f2.cur_height +" / "+ f2.id+""+f2.id2);
 			ai1.f2.x=table.ai1.f2.x;
@@ -297,7 +302,10 @@ public class Table implements Cloneable{
 		}
 		if(ai2!=null && ((ai2.f1.x!=table.ai2.f1.x || ai2.f1.y!=table.ai2.f1.y) || (ai2.f2.x!=table.ai2.f2.x || ai2.f2.y!=table.ai2.f2.y))) {
 			Field f1=get_field(ai2.f1.x, ai2.f1.y);
-			if(table.sant.load==0&&(ai2.f1.x!=table.ai2.f1.x || ai2.f1.y!=table.ai2.f1.y))text_file.print(encrypt(f1.y, f1.x)+" "+encrypt(table.ai2.f1.y,table.ai2.f1.x)+" ");//Upisi u save.txt odakle polazi i gde se pomera za figuru 1
+			if(table.sant.load==0&&(ai2.f1.x!=table.ai2.f1.x || ai2.f1.y!=table.ai2.f1.y)) {
+				text_file.print(encrypt(f1.y, f1.x)+" "+encrypt(table.ai2.f1.y,table.ai2.f1.x)+" ");//Upisi u save.txt odakle polazi i gde se pomera za figuru 1
+				sant.coordM="21 on field "+encrypt(table.ai2.f1.y,table.ai2.f1.x);
+			}
 			f1.remove_figure();
 			f1.button.setText(f1.cur_height +" / "+ f1.id+""+f1.id2);
 			ai2.f1.x=table.ai2.f1.x;
@@ -310,7 +318,10 @@ public class Table implements Cloneable{
 			f1.button.setText(f1.cur_height +" / "+ f1.id+""+f1.id2);
 			
 			Field f2=get_field(ai2.f2.x, ai2.f2.y);
-			if(table.sant.load==0&&(ai2.f2.x!=table.ai2.f2.x || ai2.f2.y!=table.ai2.f2.y))text_file.print(encrypt(f2.y, f2.x)+" "+encrypt(table.ai2.f2.y,table.ai2.f2.x)+" ");//Upisi u save.txt odakle polazi i gde se pomera za figuru 1
+			if(table.sant.load==0&&(ai2.f2.x!=table.ai2.f2.x || ai2.f2.y!=table.ai2.f2.y)) {
+				text_file.print(encrypt(f2.y, f2.x)+" "+encrypt(table.ai2.f2.y,table.ai2.f2.x)+" ");//Upisi u save.txt odakle polazi i gde se pomera za figuru 1
+				sant.coordM="22 on field "+encrypt(table.ai2.f2.y,table.ai2.f2.x);
+			}
 			f2.remove_figure();
 			f2.button.setText(f2.cur_height +" / "+ f2.id+""+f2.id2);
 			ai2.f2.x=table.ai2.f2.x;
@@ -322,6 +333,6 @@ public class Table implements Cloneable{
 			f2.add_figure(ai2.f2);
 			f2.button.setText(f2.cur_height +" / "+ f2.id+""+f2.id2);
 		}
-		if(flag) {text_file.println(encrypt(y, x));flag=false;}
+		if(flag) {text_file.println(encrypt(y, x));flag=false;sant.coordB=encrypt(y, x);}
 	}
 }

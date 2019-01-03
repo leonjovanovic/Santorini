@@ -23,8 +23,14 @@ public class Santorini extends JFrame{
 	public int cnt=0;
 	public Timer timer;
 	public boolean first_time,root=true;
+	JLabel l1,l2,stanje;
+	String coordM, coordB;
 
 	public boolean end_game;
+
+	public double max=Double.NEGATIVE_INFINITY;
+	public double max1=Double.NEGATIVE_INFINITY;
+	public double max2=Double.NEGATIVE_INFINITY;
 	
 	public Santorini() {
 		super("Santorini");
@@ -164,8 +170,9 @@ public class Santorini extends JFrame{
 		GridBagConstraints c = new GridBagConstraints();
 		
 		
-		JLabel stanje=new JLabel("Stanje");
-		stanje.setBackground(Color.CYAN);
+		stanje=new JLabel(" State: Welcome to game of Santorini. Player 1, pick starting position for your first figurine.", SwingConstants.CENTER);
+		stanje.setFont (stanje.getFont ().deriveFont (17.0f));
+		stanje.setBackground(Color.decode("0x7CFC00"));
 		stanje.setOpaque(true);
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.ipady = 40;
@@ -176,8 +183,9 @@ public class Santorini extends JFrame{
 		panel_temp.add(stanje,c);
 		
 		//panel2 = new JPanel();
-		JLabel l1=new JLabel("Player 1");
-		l1.setBackground(Color.ORANGE);
+		l1=new JLabel("Player 1", SwingConstants.CENTER);
+		l1.setFont (stanje.getFont ().deriveFont (17.0f));
+		l1.setBackground(Color.decode("0x7CFC00"));
 		l1.setOpaque(true);
 		c.fill = GridBagConstraints.BOTH;
 		c.ipady = 0;
@@ -201,7 +209,8 @@ public class Santorini extends JFrame{
 		c.gridy = 1;
 		panel_temp.add(board,c);
 		
-		JLabel l2=new JLabel("Player 2");
+		l2=new JLabel("Player 2", SwingConstants.CENTER);
+		l2.setFont (stanje.getFont ().deriveFont (17.0f));
 		c.fill = GridBagConstraints.BOTH;
 		c.weightx=0;
 		c.gridx = 6;
@@ -210,7 +219,7 @@ public class Santorini extends JFrame{
 		c.ipadx =50;
 		if(mode==2||mode==1) {c.gridy = 2;c.gridheight=4;}
 		//c.gridheight=5;
-		l2.setBackground(Color.ORANGE);
+		l2.setBackground(Color.decode("0x7CFC00"));
 		l2.setOpaque(true);
 		panel_temp.add(l2,c);		
 		

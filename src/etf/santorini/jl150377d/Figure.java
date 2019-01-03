@@ -79,7 +79,9 @@ public class Figure implements Cloneable{
 		add_field(cur);//polje na figuru
 		cur_height=cur.get_height();//updatuj visinu
 		if(table.sant.load==0&&!table.building_tree)
-			if(table.sant.mode==0||(table.sant.mode==1&&id==1))table.text_file.print(table.encrypt(old.y, old.x)+" "+table.encrypt(cur.y, cur.x)+" ");//zapisi pomeraj (iako odaberemo load, nakon sto loadujemo stavicemo load na 0)
+			if(table.sant.mode==0||(table.sant.mode==1&&id==1)) {
+				table.text_file.print(table.encrypt(old.y, old.x)+" "+table.encrypt(cur.y, cur.x)+" ");//zapisi pomeraj (iako odaberemo load, nakon sto loadujemo stavicemo load na 0)
+				table.sant.coordM=this.id+""+this.id2+" on field "+table.encrypt(cur.y, cur.x);}
 		return true;
 	}
 	
@@ -112,7 +114,9 @@ public class Figure implements Cloneable{
 		Field temp=table.lista[x][y];
 		temp.build();
 		if(table.sant.load==0&&!table.building_tree) {
-			if(table.sant.mode==0||(table.sant.mode==1&&id==1))table.text_file.println(table.encrypt(temp.y, temp.x));
+			if(table.sant.mode==0||(table.sant.mode==1&&id==1)) {
+				table.text_file.println(table.encrypt(temp.y, temp.x));
+				table.sant.coordB=table.encrypt(temp.y, temp.x);}
 		}
 		return true;
 	}	

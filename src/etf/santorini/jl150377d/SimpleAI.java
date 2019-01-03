@@ -49,6 +49,7 @@ public class SimpleAI extends Player implements Cloneable{
 				temp=table.get_field(table.ai1.x_func, table.ai1.y_func);
 				temp.add_figure(table.ai1.f2);
 				temp.button.setText(temp.cur_height +" / "+ temp.id+""+temp.id2);
+				table.sant.stanje.setText(" State: Player 2, pick starting position for your figurines.");
 				table.p12=false;
 				table.text_file.println(table.encrypt(table.ai1.f1.f.y, table.ai1.f1.f.x)+" "+table.encrypt(table.ai1.f2.f.y, table.ai1.f2.f.x));
 				return;
@@ -66,6 +67,7 @@ public class SimpleAI extends Player implements Cloneable{
 				temp=table.get_field(x_func, y_func);
 				temp.add_figure(f2);
 				temp.button.setText(temp.cur_height +" / "+ temp.id+""+temp.id2);
+				table.sant.stanje.setText(" State: Player 1 is on the move.");
 				table.p22=false;
 				table.text_file.println(table.encrypt(table.ai2.f1.f.y, table.ai2.f1.f.x)+" "+table.encrypt(table.ai2.f2.f.y, table.ai2.f2.f.x));
 				table.firstClick=table.start=true;//Zavrseno postavljanje, figurice mogu da se krecu
@@ -88,6 +90,7 @@ public class SimpleAI extends Player implements Cloneable{
 				tree=null;
 				//System.out.println(next.f_score);
 				table.repaint(next.table);
+				table.sant.stanje.setText(" State: Player "+table.player1+" is on move. Previous player moved figure "+table.sant.coordM+" and built on "+table.sant.coordB);
 				//*****Uslovi pobede i poraza******
 				if(table.ai2.f1.isWinner()||table.ai2.f2.isWinner()) {JOptionPane.showMessageDialog(table.sant, "Player 2 is winner!");table.sant.dispose();table.sant.reset();table.p1.reset();table.ai2.reset();}
 				if(table.get_player(2).isLoser()){JOptionPane.showMessageDialog(table.sant, "Player 2 is loser!");table.sant.dispose();table.sant.dispose();table.sant.reset();table.p1.reset();table.ai2.reset();}
@@ -96,13 +99,13 @@ public class SimpleAI extends Player implements Cloneable{
 			}
 			if(table.sant.mode==2) {//Za EvE
 				
-				long startTime = System.nanoTime();
-				tree=new Tree(table);//Pravimo stablo dubine 4 sa svim mogucim potezima od trenutnog stanja table				
+				tree=new Tree(table);//Pravimo stablo dubine 4 sa svim mogucim potezima od trenutnog stanja table		
+				long startTime = System.nanoTime();		
 				minimax(tree.root,0,true,Double.NEGATIVE_INFINITY,Double.POSITIVE_INFINITY);
 				long endTime = System.nanoTime();
 				long duration = (endTime - startTime);
 				durationSum+=duration; sum++;
-				System.out.println("Time: "+duration/1000000);
+				System.out.println("Time: "+duration/1000);
 				
 				System.out.println("Najbolji score: "+tree.root.f_score);
 				Node next=tree.next_root();//Tabla sa sledecim odigranim potezom;
@@ -110,21 +113,26 @@ public class SimpleAI extends Player implements Cloneable{
 				System.gc();//Hintujemo Garbage collectoru da imamo visece reference
 				table.repaint(next.table);
 				table.sant.validate();
+				table.sant.stanje.setText(" State: Player "+table.player1+" is on move. Previous player moved figure "+table.sant.coordM+" and built on "+table.sant.coordB);
 				//*****Uslovi pobede i poraza******
 				if(table.ai1.f1.isWinner()||table.ai1.f2.isWinner()) {
+					System.out.println("Prosecno vreme minimaxa: "+durationSum/1000/sum+" a broj cvorova je "+sum);
 					if(table!=null)table.text_file.close();
 					table.sant.end_game=true;JOptionPane.showMessageDialog(table.sant, "Player 1 is winner!");table.sant.dispose();table.sant.reset();table.ai1.reset();table.ai2.reset();
 				}//
 				if(table.get_player(1).isLoser()){
+					System.out.println("Prosecno vreme minimaxa: "+durationSum/1000/sum+" a broj cvorova je "+sum);
 					if(table!=null)table.text_file.close();
 					table.sant.end_game=true;JOptionPane.showMessageDialog(table.sant, "Player 2 is loser!");table.sant.dispose();table.sant.reset();table.ai1.reset();table.ai2.reset();
 				}//
 				//*****Uslovi pobede i poraza******
 				if(table.ai2.f1.isWinner()||table.ai2.f2.isWinner()) {
+					System.out.println("Prosecno vreme minimaxa: "+durationSum/1000/sum+" a broj cvorova je "+sum);
 					if(table!=null)table.text_file.close();
 					table.sant.end_game=true;JOptionPane.showMessageDialog(table.sant, "Player 2 is winner!");table.sant.dispose();table.sant.reset();table.ai1.reset();table.ai2.reset();
 				}//
 				if(table.get_player(2).isLoser()){
+					System.out.println("Prosecno vreme minimaxa: "+durationSum/1000/sum+" a broj cvorova je "+sum);
 					if(table!=null)table.text_file.close();
 					table.sant.end_game=true;JOptionPane.showMessageDialog(table.sant, "Player 2 is loser!");table.sant.dispose();table.sant.reset();table.ai1.reset();table.ai2.reset();
 				}//

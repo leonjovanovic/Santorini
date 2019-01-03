@@ -1,0 +1,22 @@
+1
+Prosecno vreme minimaxa: 499.28283870967743 a broj cvorova je 31.0
+2
+Prosecno vreme minimaxa: 476.2104705882353 a broj cvorova je 17.0
+3
+Prosecno vreme minimaxa: 917.6438181818182 a broj cvorova je 22.0
+4
+Prosecno vreme minimaxa: 711.08046875 a broj cvorova je 32.0
+5
+Prosecno vreme minimaxa: 659.4043913043478 a broj cvorova je 23.0
+6
+Prosecno vreme minimaxa: 493.27103448275864 a broj cvorova je 29.0
+7
+Prosecno vreme minimaxa: 867.8877407407408 a broj cvorova je 27.0
+8
+Prosecno vreme minimaxa: 443.17546153846155 a broj cvorova je 39.0
+9
+Prosecno vreme minimaxa: 770.2954482758621 a broj cvorova je 29.0
+10
+Prosecno vreme minimaxa: 680.989827586207 a broj cvorova je 29.0
+
+Prosecno vreme: 651.6
