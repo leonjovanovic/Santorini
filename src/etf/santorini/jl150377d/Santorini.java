@@ -182,7 +182,6 @@ public class Santorini extends JFrame{
 		c.anchor=GridBagConstraints.PAGE_START;
 		panel_temp.add(stanje,c);
 		
-		//panel2 = new JPanel();
 		l1=new JLabel("Player 1", SwingConstants.CENTER);
 		l1.setFont (stanje.getFont ().deriveFont (17.0f));
 		l1.setBackground(Color.decode("0x7CFC00"));
@@ -249,7 +248,6 @@ public class Santorini extends JFrame{
 		    	else if(table.p21&&table.p22) {
 		    		table.p21=table.p22=false;
 		    		String[] splited = line.split("\\s+");
-		    		//System.out.println(splited[0]);
 		    		table.decrypt(splited[0]);
 		    		table.get_player(2).create_figures1(table.x_decrypt, table.y_decrypt);
 		    		Field temp=table.get_field(table.x_decrypt, table.y_decrypt);

@@ -28,7 +28,7 @@ public class Field implements Cloneable{
 		button=new JButton(cur_height +" / "+ id+""+id2);
 		button.setBackground(Color.GREEN);
 		button.setForeground(Color.BLACK);
-		button.setMaximumSize(new Dimension(100,100)); //PROVERITI
+		button.setMaximumSize(new Dimension(100,100));
 		button.addActionListener(listener);
 	}
 	
@@ -77,15 +77,14 @@ public class Field implements Cloneable{
 
 		@Override
 		public void actionPerformed(ActionEvent arg) {
-			Object source=arg.getSource();
-			JButton f=(JButton)source;
-			
-			
-			if(table.start) {
-				//*****SELECT*******
-				if(table.get_firstClick()&& figure!=null && table.player1==id) { //FIGURA KOJU KORISTIMO
-					table.origin=figure;
-					table.origin.f.button.setBackground(Color.RED); //Selektujemo figuru koja gradi
+			Object source = arg.getSource();
+			JButton f = (JButton) source;
+
+			if (table.start) {
+				// *****SELECT*******
+				if (table.get_firstClick() && figure != null && table.player1 == id) { // FIGURA KOJU KORISTIMO
+					table.origin = figure;
+					table.origin.f.button.setBackground(Color.RED); // Selektujemo figuru koja gradi
 					table.set_first_click(false);
 				}
 				//POLJE KOJE GRADIMO/NA KOJE SE PREMESTANO
@@ -140,52 +139,55 @@ public class Field implements Cloneable{
 									table.sant.end_game=true;JOptionPane.showMessageDialog(table.sant, "Player "+table.player1 +" is loser!");table.sant.dispose();table.sant.reset();table.p1.reset();table.p2.reset();}
 								if(table.sant.mode!=0)table.start=false;
 							}
-							table.set_first_click(true);//Mozemo opet da selektujemo
-							
-							break;
-						}
+						table.set_first_click(true);// Mozemo opet da selektujemo
+
+						break;
+					}
 					}
 				}
 				return;
 			}
-			//*******Postavljanje figurica************
-			if(table.p11) {
+			// *******Postavljanje figurica************
+			if (table.p11) {
 				table.p1.create_figures1(x, y);
 				add_figure(table.p1.f1);
-				table.p11=false;
-				f.setText(cur_height +" / "+ id+""+id2);
-				table.sant.stanje.setText(" State: Player 1, pick starting position for your second figurine.");				
+				table.p11 = false;
+				f.setText(cur_height + " / " + id + "" + id2);
+				table.sant.stanje.setText(" State: Player 1, pick starting position for your second figurine.");
 				return;
 			}
-			if(table.p12&&table.p1.f1.f!=get_field()) {
+			if (table.p12 && table.p1.f1.f != get_field()) {
 				table.p1.create_figures2(x, y);
 				add_figure(table.p1.f2);
-				table.p12=false;
-				f.setText(cur_height +" / "+ id+""+id2);
+				table.p12 = false;
+				f.setText(cur_height + " / " + id + "" + id2);
 				table.sant.stanje.setText(" State: Player 2, pick starting position for your first figurine.");
-				table.text_file.println(table.encrypt(table.p1.f1.f.y, table.p1.f1.f.x)+" "+table.encrypt(table.p1.f2.f.y, table.p1.f2.f.x));
+				table.text_file.println(table.encrypt(table.p1.f1.f.y, table.p1.f1.f.x) + " "
+						+ table.encrypt(table.p1.f2.f.y, table.p1.f2.f.x));
 				return;
 			}
-			if(table.p21&&table.p1.f1.f!=get_field()&&table.p1.f2.f!=get_field()&&table.sant.mode==0) {
+			if (table.p21 && table.p1.f1.f != get_field() && table.p1.f2.f != get_field() && table.sant.mode == 0) {
 				table.p2.create_figures1(x, y);
 				add_figure(table.p2.f1);
-				table.p21=false;
-				f.setText(cur_height +" / "+ id+""+id2);
+				table.p21 = false;
+				f.setText(cur_height + " / " + id + "" + id2);
 				table.sant.stanje.setText(" State: Player 2, pick starting position for your second figurine.");
 				return;
 			}
-			if(table.p22&&table.p1.f1.f!=get_field()&&table.p1.f2.f!=get_field()&&table.sant.mode==0&&table.p2.f1.f!=get_field()){
+			if (table.p22 && table.p1.f1.f != get_field() && table.p1.f2.f != get_field() && table.sant.mode == 0
+					&& table.p2.f1.f != get_field()) {
 				table.p2.create_figures2(x, y);
 				add_figure(table.p2.f2);
-				table.p22=false;
-				f.setText(cur_height +" / "+ id+""+id2);
-				table.firstClick=table.start=true;//Zavrseno postavljanje, figurice mogu da se krecu
-				table.player1=1;
-				table.text_file.println(table.encrypt(table.p2.f1.f.y, table.p2.f1.f.x)+" "+table.encrypt(table.p2.f2.f.y, table.p2.f2.f.x));
-				table.sant.stanje.setText(" State: Player "+table.player1+" is on the move.");
+				table.p22 = false;
+				f.setText(cur_height + " / " + id + "" + id2);
+				table.firstClick = table.start = true;// Zavrseno postavljanje, figurice mogu da se krecu
+				table.player1 = 1;
+				table.text_file.println(table.encrypt(table.p2.f1.f.y, table.p2.f1.f.x) + " "
+						+ table.encrypt(table.p2.f2.f.y, table.p2.f2.f.x));
+				table.sant.stanje.setText(" State: Player " + table.player1 + " is on the move.");
 				return;
 			}
-		}		
+		}
 	}
 
 	public void change_color(Color clr) {
@@ -196,44 +198,37 @@ public class Field implements Cloneable{
 	public Field get_field() {
 		return this;
 	}
-	
+
 	public void change_color_on_height(int i) {
-		switch(i) {//zavisnosti od nove visine polja promeni mu boju
+		switch (i) {// zavisnosti od nove visine polja promeni mu boju
 		case 1:
 		case 2:
-		case 3:{
+		case 3: {
 			change_color(Color.WHITE);
 			button.setBackground(color);
 			break;
 		}
-		case 4:{
+		case 4: {
 			change_color(Color.CYAN);
 			button.setBackground(color);
 			break;
 		}
+		}
 	}
-	}
-	
+
 	public String toString() {
-		String s="x: "+x+" y: "+y;
+		String s = "x: " + x + " y: " + y;
 		return s;
 	}
-	
+
 	public Field clone() throws CloneNotSupportedException {
-		Field field = (Field)super.clone();
-		field.x=this.x;
-		field.y=this.y;
-		field.cur_height=this.cur_height;
-		//if(this.figure!=null)field.figure=this.figure;
-		//else field.figure=null;
-		field.id=this.id;
-		field.id2=this.id2;
-		field.color=this.color;
-		//field.button=new JButton(cur_height +" / "+ id+""+id2);
-		//button.setBackground(field.color);
-		//button.setForeground(Color.BLACK);
-		//field.listener = new FieldAction();
-		//field.button.addActionListener(listener);
+		Field field = (Field) super.clone();
+		field.x = this.x;
+		field.y = this.y;
+		field.cur_height = this.cur_height;
+		field.id = this.id;
+		field.id2 = this.id2;
+		field.color = this.color;
 		return field;
 	}
 }
