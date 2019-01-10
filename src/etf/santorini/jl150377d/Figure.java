@@ -47,7 +47,6 @@ public class Figure implements Cloneable {
 		Field dest = table.get_field(x, y);
 		if (!table.field_exist(x, y))
 			return false;
-		// if(dest.get_height()-cur_height>1)System.out.println("Figura "+this+" ne moze da se pomeri dest: "+dest.get_height()+" a origin je: "+cur_height);
 		if (dest.get_height() - cur_height > 1 || dest.is_taken() || Math.abs(x - this.x) > 1
 				|| Math.abs(y - this.y) > 1 || (x == this.x && y == this.y) || dest.cur_height == 4)
 			return false;

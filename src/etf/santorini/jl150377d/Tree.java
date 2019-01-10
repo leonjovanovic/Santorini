@@ -19,7 +19,6 @@ public class Tree {
 
 	public Node next_root() {
 		Double score = root.f_score;
-		// if(score==0)return null;
 		List<Node> children = new ArrayList<Node>();
 		children = root.children;
 		for (int i = 0; i < children.size(); i++) {
